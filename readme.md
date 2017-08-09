@@ -1,4 +1,5 @@
 # expression-calculator
+[![build status](https://travis-ci.org/stIncMale/expression-calculator.svg?branch=master)](https://travis-ci.org/stIncMale/expression-calculator)
 
 A calculator that calculates expressions like add(1, mult(2, 3)), or let(a, 5, add(a, a)).
 
