@@ -21,9 +21,7 @@
     <url>${exrpcalculator.organizationUrl}</url>
   </organization>
   <properties>
-    <spring_version>4.0.6.RELEASE</spring_version>
-    <slf4j.version>1.7.12</slf4j.version>
-    <netty4.version>4.0.29.Final</netty4.version>
+    <log4j.version>2.8.2</log4j.version>
     <exrpcalculator.charset>UTF-8</exrpcalculator.charset>
     <project.build.sourceEncoding>${exrpcalculator.charset}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${exrpcalculator.charset}</project.reporting.outputEncoding>
@@ -32,7 +30,8 @@
     <exrpcalculator.licenseUrl>http://www.wtfpl.net/</exrpcalculator.licenseUrl>
     <exrpcalculator.inceptionYear>2017</exrpcalculator.inceptionYear>
     <exrpcalculator.organizationName>Valentin Kovalenko</exrpcalculator.organizationName>
-    <exrpcalculator.organizationUrl>https://sites.google.com/site/aboutmale/</exrpcalculator.organizationUrl>
+    <exrpcalculator.organizationUrl>https://sites.google.com/site/aboutmale/
+    </exrpcalculator.organizationUrl>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -42,14 +41,9 @@
         <version>3.3.2</version>
       </dependency>
       <dependency>
-        <groupId>io.netty</groupId>
-        <artifactId>netty-all</artifactId>
-        <version>${netty4.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
+        <version>1.7.25</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
@@ -62,51 +56,39 @@
         <version>17.0</version>
       </dependency>
       <dependency>
-        <groupId>javax.inject</groupId>
-        <artifactId>javax.inject</artifactId>
-        <version>1</version>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>${log4j.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>${spring_version}</version>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4j.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.indeed</groupId>
-        <artifactId>java-dogstatsd-client</artifactId>
-        <version>2.0.7</version>
+        <groupId>com.beust</groupId>
+        <artifactId>jcommander</artifactId>
+        <version>1.72</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.11</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring_version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j-impl</artifactId>
-        <version>2.8.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-all</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -117,32 +99,16 @@
       <artifactId>guava</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>com.indeed</groupId>
-      <artifactId>java-dogstatsd-client</artifactId>
-      <optional>true</optional>
+      <groupId>com.beust</groupId>
+      <artifactId>jcommander</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -163,7 +129,7 @@
             <showDeprecation>true</showDeprecation>
             <compilerArgs>
               <arg>-Werror</arg>
-              <arg>-Xlint:all,-try</arg>
+              <arg>-Xlint:all,-try,-processing</arg>
             </compilerArgs>
           </configuration>
         </plugin>
@@ -175,12 +141,31 @@
             <archive>
               <addMavenDescriptor>false</addMavenDescriptor>
               <manifest>
+                <mainClass>stinc.male.exrpcalculator.Main</mainClass>
                 <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
                 <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
                 <addClasspath>false</addClasspath>
               </manifest>
             </archive>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.0.0</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -198,7 +183,8 @@
           <version>2.10.3</version>
           <configuration>
             <detectJavaApiLink>false</detectJavaApiLink>
-            <doctitle>Expression Calculator ${project.version} Java Source Code Documentation</doctitle>
+            <doctitle>Expression Calculator ${project.version} Java Source Code Documentation
+            </doctitle>
             <author>false</author>
             <show>protected</show>
             <linksource>false</linksource>
@@ -248,40 +234,35 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>2.4</version>
-          <executions>
-            <execution>
-              <id>attach-sources</id>
-              <phase>verify</phase>
-              <goals>
-                <goal>jar-no-fork</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
       </plugins>
     </pluginManagement>
-    <defaultGoal>install</defaultGoal>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-    </plugins>
+    <defaultGoal>package</defaultGoal>
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <targetPath>.</targetPath>
+      </resource>
+    </resources>
   </build>
   <profiles>
     <profile>
       <id>default</id>
       <properties>
         <maven.test.skip>false</maven.test.skip>
-        <exrpcalculator.maven-surefire-plugin.parallel>all</exrpcalculator.maven-surefire-plugin.parallel>
+        <exrpcalculator.maven-surefire-plugin.parallel>suitesAndClasses</exrpcalculator.maven-surefire-plugin.parallel>
       </properties>
       <activation>
         <activeByDefault/>
       </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>doc</id>

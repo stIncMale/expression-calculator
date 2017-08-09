@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="Logging Config" status="warn" strict="true">
+  <Properties>
+    <Property name="exprcalculator.layoutPattern">
+      [%-5level][%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ}][%t][%logger] %msg%n
+    </Property>
+    <Property name="exprcalculator.applicationLogFileName">exprcalculator.log</Property>
+    <Property name="exprcalculator.applicationLogFile">./${exprcalculator.applicationLogFileName}</Property>
+  </Properties>
+  <Appenders>
+    <Appender type="RollingFile" name="applicationLog"
+        fileName="${exprcalculator.applicationLogFile}"
+        immediateFlush="true" bufferedIO="true"
+        createOnDemand="true"
+        filePattern="${exprcalculator.applicationLogFileName}_%i">
+      <Layout type="PatternLayout" charset="${exrpcalculator.charset}">
+        <Pattern>${exprcalculator.layoutPattern}</Pattern>
+      </Layout>
+      <Policies>
+        <OnStartupTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy max="1"/>
+    </Appender>
+  </Appenders>
+  <Loggers>
+    <Root level="warn">
+      <AppenderRef ref="applicationLog"/>
+    </Root>
+    <Logger name="stinc.male.exrpcalculator" additivity="false" level="warn">
+      <AppenderRef ref="applicationLog"/>
+    </Logger>
+  </Loggers>
+</Configuration>
