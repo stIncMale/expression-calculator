@@ -2,6 +2,7 @@ package stinc.male.exrpcalculator.logic;
 
 import java.math.MathContext;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,7 +20,7 @@ public final class TestExpressionParser {
   @Test
   public final void parse1() {
     final String expr = "let(a, let(b, 10, add(b, b)), let(b, 20, add(a,b)))";
-    final List<Word> words = parse(expr, mc);
+    final List<Word> words = parse(expr, mc).collect(Collectors.toList());
     assertFalse(words.stream()
         .filter(w -> w.getType().isIgnorable())
         .findAny()
@@ -32,7 +33,7 @@ public final class TestExpressionParser {
   @Test
   public final void parse2() {
     final String expr = "let ( \n _a_d   , -5.67, let(bw, mult \t (_a_d, 10  ), add(bw, _a_d)))";
-    final List<Word> words = parse(expr, mc);
+    final List<Word> words = parse(expr, mc).collect(Collectors.toList());
     assertFalse(words.stream()
         .filter(w -> w.getType().isIgnorable())
         .findAny()

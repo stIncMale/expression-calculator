@@ -30,7 +30,7 @@ public final class Args {
   private MathContext mc = MathContext.DECIMAL32;
 
   public Args(@Nullable final String[] args) throws ParameterException {
-    this(args, 0, args.length - 1);
+    this(args, 0, Math.max(0, args.length - 1));
   }
 
   public Args(@Nullable final String[] args, int fromIdxInclusive, int toIdxInclusive) throws ParameterException {

@@ -25,11 +25,13 @@ public final class ExpressionParser {
   private static final Logger logger = LoggerFactory.getLogger(ExpressionParser.class);
 
   /**
-   * This can be {@linkplain Stream streamified} to reduce memory footprint.
+   * Current implementation returns {@link Stream} created from {@link List},
+   * but it is possible to generate stream without the need to read through the whole {@code expr}
+   * thus minimizing memory and GC footprint.
    *
    * @throws CalculationException
    */
-  static final List<Word> parse(@Nullable final String expr, final MathContext mc) throws CalculationException {//TODO return stream
+  static final Stream<Word> parse(@Nullable final String expr, final MathContext mc) throws CalculationException {
     checkNotNull(mc, "The argument %s must not be null", "mc");
     logger.debug("Parsing '{}'", expr);
     final List<Word> result;
@@ -72,7 +74,7 @@ public final class ExpressionParser {
                 } else if (isTrailerSymbol(symbol)) {
                   result.add(wordInfo.buildWordAndStartNew(idx, symbol, expr));
                 } else {//invalid symbol
-                  throw new CalculationException(problemIdx, expr, null, null);
+                  throw new CalculationException(problemIdx, expr);
                 }
                 break;
               }
@@ -82,7 +84,7 @@ public final class ExpressionParser {
                 } else if (isTrailerSymbol(symbol)) {
                   result.add(wordInfo.buildWordAndStartNew(idx, symbol, expr));
                 } else {//invalid symbol
-                  throw new CalculationException(problemIdx, expr, null, null);
+                  throw new CalculationException(problemIdx, expr);
                 }
                 break;
               }
@@ -97,15 +99,16 @@ public final class ExpressionParser {
         } catch (final CalculationException e) {
           throw e;
         } catch (final RuntimeException e) {
-          throw new CalculationException(problemIdx, expr, null, e);
+          throw new CalculationException(problemIdx, expr, e);
         }
       }
     }
     logger.debug("Parsing result for '{}' is{}[{}]", expr, LN,
         result.stream()
             .map(Word::toString)
-            .collect(Collectors.joining(LN)));
-    return result;
+            .collect(Collectors.joining(LN))
+        );
+    return result.stream();
   }
 
   private static final Type wordTypeFor(final char startingSymbol) throws IllegalArgumentException {

@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.Locale;
 import javax.annotation.Nullable;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -18,12 +17,6 @@ import stinc.male.exrpcalculator.arg.InputAndArgs;
 import stinc.male.exrpcalculator.logic.CalculationException;
 import stinc.male.exrpcalculator.logic.ExpressionCalculator;
 
-/**
- * TODO
- * Notes:
- * - the last expression in the examples is missing the last closing bracket
- * - variables can not be named same as operations
- */
 public final class Main {
   public static final int EXIT_STATUS_FAILURE = 1;
   /**
@@ -59,11 +52,10 @@ public final class Main {
       final ExpressionCalculator calculator = new ExpressionCalculator(new MathContext(
           mc.getPrecision() == 0 ? 0 : inputAndArgs.getArguments().getMathContext().getPrecision() + 1,//by using increased precision and then rounding we can achieve mult(div(1, 3), 3) == 1 instead of 0.999...
           inputAndArgs.getArguments().getMathContext().getRoundingMode()));
-      final long startNanos = System.nanoTime();
       final BigDecimal result = calculator.calculate(inputAndArgs.getInput())
           .round(inputAndArgs.getArguments().getMathContext());
       final String strResult = result.toPlainString();
-      logger.info("Calculation result {}, calculation time {}ms", strResult, Duration.ofNanos(System.nanoTime() - startNanos).toMillis());
+      logger.info("Calculation result {}", strResult);
       System.out.println(strResult);
     } catch (final ParameterException e) {
       System.err.println(e.getLocalizedMessage());
@@ -72,7 +64,8 @@ public final class Main {
     } catch (final CalculationException e) {
       System.err.println(e.description());
       Args.printUsage();
-      logger.error(null, e);
+      logger.warn(e.description());
+      logger.warn(null, e);
       exitStatus = EXIT_STATUS_FAILURE;
     } catch (final RuntimeException e) {
       logger.error(null, e);

@@ -10,13 +10,38 @@ public final class CalculationException extends RuntimeException {
 
   private final int problemIdx;
   @Nullable
+  private final String word;
+  @Nullable
   private String expr;
+
+  CalculationException(@Nullable final String expr) {
+    this(-1, null, expr, null, null);
+  }
 
   CalculationException(
       @Nullable final String expr,
-      @Nullable final String message,
       @Nullable final Throwable cause) {
-    this(-1, expr, message, cause);
+    this(-1, null, expr, null, cause);
+  }
+
+  CalculationException(final int problemIdx, @Nullable final String expr) {
+    this(problemIdx, null, expr, null, null);
+  }
+
+  CalculationException(final int problemIdx, @Nullable final String expr, @Nullable Throwable cause) {
+    this(problemIdx, null, expr, null, cause);
+  }
+
+  CalculationException(final Word word) {
+    this(word.getPosition(), word.getWord(), null, null, null);
+  }
+
+  CalculationException(final Word word, @Nullable final String expr) {
+    this(word.getPosition(), word.getWord(), expr, null, null);
+  }
+
+  CalculationException(final Word word, @Nullable final String expr, @Nullable Throwable cause) {
+    this(word.getPosition(), word.getWord(), expr, null, cause);
   }
 
   /**
@@ -24,15 +49,16 @@ public final class CalculationException extends RuntimeException {
    */
   CalculationException(
       final int problemIdx,
+      @Nullable final String word,
       @Nullable final String expr,
       @Nullable final String message,
       @Nullable final Throwable cause) {
-    super(
-        (message == null && expr != null)
-            ? description(problemIdx, expr)
+    super((message == null && expr != null)
+            ? description(problemIdx, word, expr)
             : message,
         cause);
     this.problemIdx = problemIdx;
+    this.word = word;
     this.expr = expr;
   }
 
@@ -52,10 +78,10 @@ public final class CalculationException extends RuntimeException {
     if (this.expr == null) {
       throw new Error(String.format("%s has not been set", "expr"));
     }
-    return description(problemIdx, expr);
+    return description(problemIdx, word, expr);
   }
 
-  private static final String description(final int problemIdx, final String expr) {
+  private static final String description(final int problemIdx, @Nullable final String word, final String expr) {
     final String result;
     if (problemIdx < 0) {
       result = String.format("Can not calculate expression:%s%s", LN, expr);
@@ -73,7 +99,7 @@ public final class CalculationException extends RuntimeException {
         }
         spaces = new String(spaceChars);
       }
-      result = String.format("Problem with '%s' at index %s:", expr.charAt(problemIdx), problemIdx) + LN
+      result = String.format("Problem with '%s' at index %s:", word == null ? expr.charAt(problemIdx) : word, problemIdx) + LN
           + expr + LN
           + spaces + '^';
     }
