@@ -2,11 +2,9 @@ package stinc.male.exprcalculator.logic;
 
 import java.math.MathContext;
 import java.util.stream.Stream;
-import javax.annotation.concurrent.Immutable;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static stinc.male.exprcalculator.logic.ExpressionParser.parse;
 
-@Immutable
 final class ParsedExpression {
   private final String expr;
   private final Stream<Word> words;
