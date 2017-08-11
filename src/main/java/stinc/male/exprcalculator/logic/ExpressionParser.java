@@ -1,4 +1,4 @@
-package stinc.male.exrpcalculator.logic;
+package stinc.male.exprcalculator.logic;
 
 import java.math.MathContext;
 import java.util.ArrayList;
@@ -10,16 +10,16 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stinc.male.exrpcalculator.logic.Word.Type;
+import stinc.male.exprcalculator.logic.Word.Type;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static stinc.male.exrpcalculator.Main.LN;
-import static stinc.male.exrpcalculator.logic.Word.Type.CLOSING_BRACKET;
-import static stinc.male.exrpcalculator.logic.Word.Type.COMMA;
-import static stinc.male.exrpcalculator.logic.Word.Type.EMPTY;
-import static stinc.male.exrpcalculator.logic.Word.Type.LITERAL;
-import static stinc.male.exrpcalculator.logic.Word.Type.NUMERIC;
-import static stinc.male.exrpcalculator.logic.Word.Type.OPENING_BRACKET;
+import static stinc.male.exprcalculator.Main.LN;
+import static stinc.male.exprcalculator.logic.Word.Type.CLOSING_BRACKET;
+import static stinc.male.exprcalculator.logic.Word.Type.COMMA;
+import static stinc.male.exprcalculator.logic.Word.Type.EMPTY;
+import static stinc.male.exprcalculator.logic.Word.Type.LITERAL;
+import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
+import static stinc.male.exprcalculator.logic.Word.Type.OPENING_BRACKET;
 
 public final class ExpressionParser {
   private static final Logger logger = LoggerFactory.getLogger(ExpressionParser.class);

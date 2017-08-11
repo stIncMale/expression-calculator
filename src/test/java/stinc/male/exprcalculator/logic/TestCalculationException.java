@@ -1,10 +1,10 @@
-package stinc.male.exrpcalculator.logic;
+package stinc.male.exprcalculator.logic;
 
 import java.math.MathContext;
 import org.junit.Test;
-import stinc.male.exrpcalculator.logic.Word.Type;
+import stinc.male.exprcalculator.logic.Word.Type;
 import static org.junit.Assert.assertEquals;
-import static stinc.male.exrpcalculator.Main.LN;
+import static stinc.male.exprcalculator.Main.LN;
 
 public final class TestCalculationException {
   public TestCalculationException() {
@@ -17,7 +17,7 @@ public final class TestCalculationException {
       + "0123456789" + LN
       + "     ^";
     assertEquals(expected, new CalculationException(
-        new Word(
+        new stinc.male.exprcalculator.logic.Word(
             "567",
             Type.LITERAL,
             5,

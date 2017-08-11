@@ -1,4 +1,4 @@
-package stinc.male.exrpcalculator.logic;
+package stinc.male.exprcalculator.logic;
 
 import java.math.MathContext;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static stinc.male.exrpcalculator.logic.ExpressionParser.parse;
-import static stinc.male.exrpcalculator.logic.Word.Type.CLOSING_BRACKET;
-import static stinc.male.exrpcalculator.logic.Word.Type.LITERAL;
-import static stinc.male.exrpcalculator.logic.Word.Type.NUMERIC;
+import static stinc.male.exprcalculator.logic.ExpressionParser.parse;
+import static stinc.male.exprcalculator.logic.Word.Type.CLOSING_BRACKET;
+import static stinc.male.exprcalculator.logic.Word.Type.LITERAL;
+import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
 
 public final class TestExpressionParser {
   private static final MathContext mc = MathContext.DECIMAL32;

@@ -2,36 +2,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <groupId>stinc.male.exrpcalculator</groupId>
+  <groupId>stinc.male.exprcalculator</groupId>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>exrpcalculator</artifactId>
+  <artifactId>exprcalculator</artifactId>
   <version>0.1</version>
   <name>Expression calculator</name>
   <packaging>jar</packaging>
-  <url>${exrpcalculator.url}</url>
+  <url>${exprcalculator.url}</url>
   <licenses>
     <license>
-      <name>${exrpcalculator.licenseName}</name>
-      <url>${exrpcalculator.licenseUrl}</url>
+      <name>${exprcalculator.licenseName}</name>
+      <url>${exprcalculator.licenseUrl}</url>
     </license>
   </licenses>
-  <inceptionYear>${exrpcalculator.inceptionYear}</inceptionYear>
+  <inceptionYear>${exprcalculator.inceptionYear}</inceptionYear>
   <organization>
-    <name>${exrpcalculator.organizationName}</name>
-    <url>${exrpcalculator.organizationUrl}</url>
+    <name>${exprcalculator.organizationName}</name>
+    <url>${exprcalculator.organizationUrl}</url>
   </organization>
   <properties>
     <log4j.version>2.8.2</log4j.version>
-    <exrpcalculator.charset>UTF-8</exrpcalculator.charset>
-    <project.build.sourceEncoding>${exrpcalculator.charset}</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>${exrpcalculator.charset}</project.reporting.outputEncoding>
-    <exrpcalculator.url>https://github.com/stIncMale/expression-calculator</exrpcalculator.url>
-    <exrpcalculator.licenseName>WTFPL</exrpcalculator.licenseName>
-    <exrpcalculator.licenseUrl>http://www.wtfpl.net/</exrpcalculator.licenseUrl>
-    <exrpcalculator.inceptionYear>2017</exrpcalculator.inceptionYear>
-    <exrpcalculator.organizationName>Valentin Kovalenko</exrpcalculator.organizationName>
-    <exrpcalculator.organizationUrl>https://sites.google.com/site/aboutmale/
-    </exrpcalculator.organizationUrl>
+    <exprcalculator.charset>UTF-8</exprcalculator.charset>
+    <project.build.sourceEncoding>${exprcalculator.charset}</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${exprcalculator.charset}</project.reporting.outputEncoding>
+    <exprcalculator.url>https://github.com/stIncMale/expression-calculator</exprcalculator.url>
+    <exprcalculator.licenseName>WTFPL</exprcalculator.licenseName>
+    <exprcalculator.licenseUrl>http://www.wtfpl.net/</exprcalculator.licenseUrl>
+    <exprcalculator.inceptionYear>2017</exprcalculator.inceptionYear>
+    <exprcalculator.organizationName>Valentin Kovalenko</exprcalculator.organizationName>
+    <exprcalculator.organizationUrl>https://sites.google.com/site/aboutmale/
+    </exprcalculator.organizationUrl>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -132,7 +132,7 @@
           <configuration>
             <source>8</source>
             <target>8</target>
-            <encoding>${exrpcalculator.charset}</encoding>
+            <encoding>${exprcalculator.charset}</encoding>
             <debug>true</debug>
             <debuglevel>lines,vars,source</debuglevel>
             <showWarnings>true</showWarnings>
@@ -151,7 +151,7 @@
             <archive>
               <addMavenDescriptor>false</addMavenDescriptor>
               <manifest>
-                <mainClass>stinc.male.exrpcalculator.Main</mainClass>
+                <mainClass>stinc.male.exprcalculator.Main</mainClass>
                 <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
                 <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
                 <addClasspath>false</addClasspath>
@@ -183,7 +183,7 @@
           <version>2.20</version>
           <configuration>
             <trimStackTrace>false</trimStackTrace>
-            <parallel>${exrpcalculator.maven-surefire-plugin.parallel}</parallel>
+            <parallel>${exprcalculator.maven-surefire-plugin.parallel}</parallel>
             <threadCount>5</threadCount>
           </configuration>
         </plugin>
@@ -199,18 +199,18 @@
             <show>protected</show>
             <linksource>false</linksource>
             <bottom><![CDATA[<p>]]></bottom>
-            <charset>${exrpcalculator.charset}</charset>
-            <docencoding>${exrpcalculator.charset}</docencoding>
-            <encoding>${exrpcalculator.charset}</encoding>
+            <charset>${exprcalculator.charset}</charset>
+            <docencoding>${exprcalculator.charset}</docencoding>
+            <encoding>${exprcalculator.charset}</encoding>
             <header>
               <![CDATA[
-								<a href="${exrpcalculator.url}">Expression calculator</a>
+								<a href="${exprcalculator.url}">Expression calculator</a>
 								<br></br>
 								Java Source Code Documentation
 							]]>
             </header>
             <footer>
-              <![CDATA[Licensed under <a href="${exrpcalculator.licenseUrl}">${exrpcalculator.licenseName}</a>]]>
+              <![CDATA[Licensed under <a href="${exprcalculator.licenseUrl}">${exprcalculator.licenseName}</a>]]>
             </footer>
             <locale>en</locale>
             <windowtitle>Expression Calculator Java Source Code Documentation</windowtitle>
@@ -218,7 +218,7 @@
               <group>
                 <title>Expression Calculator</title>
                 <packages>
-                  stinc.male.exrpcalculator:stinc.male.exrpcalculator.*
+                  stinc.male.exprcalculator:stinc.male.exprcalculator.*
                 </packages>
               </group>
             </groups>
@@ -260,7 +260,7 @@
       <id>default</id>
       <properties>
         <maven.test.skip>false</maven.test.skip>
-        <exrpcalculator.maven-surefire-plugin.parallel>suitesAndClasses</exrpcalculator.maven-surefire-plugin.parallel>
+        <exprcalculator.maven-surefire-plugin.parallel>suitesAndClasses</exprcalculator.maven-surefire-plugin.parallel>
       </properties>
       <activation>
         <activeByDefault/>

@@ -13,7 +13,7 @@
         immediateFlush="true" bufferedIO="true"
         createOnDemand="true"
         filePattern="${exprcalculator.applicationLogFileName}_%i">
-      <Layout type="PatternLayout" charset="${exrpcalculator.charset}">
+      <Layout type="PatternLayout" charset="${exprcalculator.charset}">
         <Pattern>${exprcalculator.layoutPattern}</Pattern>
       </Layout>
       <Policies>
@@ -27,7 +27,7 @@
     <Root level="warn">
       <AppenderRef ref="applicationLog"/>
     </Root>
-    <Logger name="stinc.male.exrpcalculator" additivity="false" level="warn">
+    <Logger name="stinc.male.exprcalculator" additivity="false" level="warn">
       <AppenderRef ref="applicationLog"/>
     </Logger>
   </Loggers>

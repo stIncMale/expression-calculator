@@ -1,4 +1,4 @@
-package stinc.male.exrpcalculator.arg;
+package stinc.male.exprcalculator.arg;
 
 import com.beust.jcommander.ParameterException;
 import org.apache.logging.log4j.Level;

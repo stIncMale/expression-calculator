@@ -1,4 +1,4 @@
-package stinc.male.exrpcalculator.logic;
+package stinc.male.exprcalculator.logic;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -15,10 +15,10 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static stinc.male.exrpcalculator.Main.LN;
-import static stinc.male.exrpcalculator.logic.Word.LogicalType.OPERAND;
-import static stinc.male.exrpcalculator.logic.Word.LogicalType.OPERAND_VAR;
-import static stinc.male.exrpcalculator.logic.Word.LogicalType.OPERATOR_LET;
+import static stinc.male.exprcalculator.Main.LN;
+import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND;
+import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND_VAR;
+import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERATOR_LET;
 
 public final class ExpressionCalculator {
   private static final Logger logger = LoggerFactory.getLogger(ExpressionCalculator.class);

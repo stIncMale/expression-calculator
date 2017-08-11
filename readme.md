@@ -9,7 +9,7 @@ Install [Maven](https://maven.apache.org/) and execute
 
 ## Usage
 ```
-java -jar exrpcalculator-0.1.jar [options] "expression"
+java -jar exprcalculator-0.1.jar [options] "expression"
   Options:
     -v, -log
       Logging level. Possible values: OFF, ERROR, WARN, INFO, DEBUG
@@ -22,7 +22,7 @@ java -jar exrpcalculator-0.1.jar [options] "expression"
 ```
 One can also specify expression via the standard input stream:
 ```
-echo "expression" | java -jar exrpcalculator-0.1.jar
+echo "expression" | java -jar exprcalculator-0.1.jar
 ```
 
 ## Expression systax
@@ -36,70 +36,70 @@ Names of variables can not be the same as names of operators.
 
 ## Examples
 ```
-java -jar exrpcalculator-0.1.jar "-3.14"
+java -jar exprcalculator-0.1.jar "-3.14"
 -3.14
 ```
 
 The next calculation fails because `(-3.14)` is not an expression:
 ```
-java -jar exrpcalculator-0.1.jar "(-3.14)"
+java -jar exprcalculator-0.1.jar "(-3.14)"
 Problem with ')' at index 6:
 (-3.14)
       ^
 ```
 
 ```
-java -jar exrpcalculator-0.1.jar "add(1, 2)"
+java -jar exprcalculator-0.1.jar "add(1, 2)"
 3
 ```
 
 Unlimited precision is specified with `-p 0`,
 but `0.1` divided by `0.3` is a repeating decimal and can not be represented with unlimited precision:
 ```
-java -jar exrpcalculator-0.1.jar -p 0 "div(0.1, 0.3)"
+java -jar exprcalculator-0.1.jar -p 0 "div(0.1, 0.3)"
 Problem with 'div' at index 0:
 div(0.1, 0.3)
 ^
 ```
 
 ```
-java -jar exrpcalculator-0.1.jar "add(1, mult(2, 3))"
+java -jar exprcalculator-0.1.jar "add(1, mult(2, 3))"
 7
 ```
 
 ```
-java -jar exrpcalculator-0.1.jar "mult(add(2, 2), div(9, 3))"
+java -jar exprcalculator-0.1.jar "mult(add(2, 2), div(9, 3))"
 12
 ```
 
 ```
-java -jar exrpcalculator-0.1.jar "let(a, 5, add(a, a))"
+java -jar exprcalculator-0.1.jar "let(a, 5, add(a, a))"
 10
 ```
 
 ```
-java -jar exrpcalculator-0.1.jar "let(a, 5, let(b, mult(a, 10), add(b, a)))"
+java -jar exprcalculator-0.1.jar "let(a, 5, let(b, mult(a, 10), add(b, a)))"
 55
 ```
 
 ```
-java -jar exrpcalculator-0.1.jar "let(a, let(b, 10, add(b, b)), let(b, 20, add(a, b)))"
+java -jar exprcalculator-0.1.jar "let(a, let(b, 10, add(b, b)), let(b, 20, add(a, b)))"
 40
 ```
 
 ```
-java -jar exrpcalculator-0.1.jar "let(a, let(b, let(_var, 1, div(1, _var)), add(b, b)), let(b, 20, add(a, b)))"
+java -jar exprcalculator-0.1.jar "let(a, let(b, let(_var, 1, div(1, _var)), add(b, b)), let(b, 20, add(a, b)))"
 22
 ```
 
 ```
-java -jar exrpcalculator-0.1.jar "let(a, 1, add(let(b, 2, div(b, 1)), -1.0))"
+java -jar exprcalculator-0.1.jar "let(a, 1, add(let(b, 2, div(b, 1)), -1.0))"
 1.0
 ```
 
 This calculation fails because we try to define `var` twice within the same scope:
 ```
-java -jar exrpcalculator-0.1.jar "let(var, 1, add(let(var, 2, div(var, 1)), 1))"
+java -jar exprcalculator-0.1.jar "let(var, 1, add(let(var, 2, div(var, 1)), 1))"
 Problem with 'var' at index 20:
 let(var, 1, add(let(var, 2, div(var, 1)), 1))
                     ^

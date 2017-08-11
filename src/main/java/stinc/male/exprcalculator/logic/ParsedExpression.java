@@ -1,10 +1,10 @@
-package stinc.male.exrpcalculator.logic;
+package stinc.male.exprcalculator.logic;
 
 import java.math.MathContext;
 import java.util.stream.Stream;
 import javax.annotation.concurrent.Immutable;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static stinc.male.exrpcalculator.logic.ExpressionParser.parse;
+import static stinc.male.exprcalculator.logic.ExpressionParser.parse;
 
 @Immutable
 final class ParsedExpression {

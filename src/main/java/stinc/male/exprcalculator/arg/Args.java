@@ -1,4 +1,4 @@
-package stinc.male.exrpcalculator.arg;
+package stinc.male.exprcalculator.arg;
 
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
@@ -11,14 +11,14 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import org.apache.logging.log4j.Level;
-import stinc.male.exrpcalculator.Main;
+import stinc.male.exprcalculator.Main;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Represents application arguments.
  */
 public final class Args {
-  private static final String NAME_OF_EXECUTABLE = "java -jar exrpcalculator.jar";
+  private static final String NAME_OF_EXECUTABLE = "java -jar exprcalculator.jar";
 
   @Parameter(names = {"-v", "-log"}, description = "Logging level. Possible values: OFF, ERROR, WARN, INFO, DEBUG", converter = LoggingLevelConverter.class)
   private Level loggingLevel = Level.ERROR;

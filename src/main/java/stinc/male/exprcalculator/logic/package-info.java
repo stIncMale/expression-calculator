@@ -1,4 +1,4 @@
 /**
  * Contains utilities for parsing and calculating expressions.
  */
-package stinc.male.exrpcalculator.logic;
+package stinc.male.exprcalculator.logic;

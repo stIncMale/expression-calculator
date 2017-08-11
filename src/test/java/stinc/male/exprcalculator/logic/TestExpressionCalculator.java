@@ -1,4 +1,4 @@
-package stinc.male.exrpcalculator.logic;
+package stinc.male.exprcalculator.logic;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
