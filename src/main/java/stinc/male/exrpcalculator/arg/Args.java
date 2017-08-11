@@ -5,6 +5,8 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.google.common.collect.ImmutableSet;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -18,8 +20,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Args {
   private static final String NAME_OF_EXECUTABLE = "java -jar exrpcalculator.jar";
 
-  @Parameter(names = {"-v", "-log"}, description = "Logging level. Possible values: OFF, ERROR, WARN, DEBUG", converter = LoggingLevelConverter.class)
+  @Parameter(names = {"-v", "-log"}, description = "Logging level. Possible values: OFF, ERROR, WARN, INFO, DEBUG", converter = LoggingLevelConverter.class)
   private Level loggingLevel = Level.ERROR;
+
+  @Parameter(names = {"-p", "-precision"},
+      description = "Precision: the number of digits to be used. Must not be negative. " +
+          "Use 0 for unlimited precision, but this will result in failures to calculate expressions which lead to irrational or repeating decimals (e.g. 'div(1, 3)')",
+      converter = MathContextConverter.class)
+  private MathContext mc = MathContext.DECIMAL32;
 
   public Args(@Nullable final String[] args) throws ParameterException {
     this(args, 0, args.length - 1);
@@ -58,9 +66,14 @@ public final class Args {
     return loggingLevel;
   }
 
+  public final MathContext getMathContext() {
+    return mc;
+  }
+
   @Override
   public final String toString() {
-    return "{loggingLevel=" + loggingLevel + '}';
+    return "{loggingLevel=" + loggingLevel
+        + ", mc=" + mc + '}';
   }
 
   /**
@@ -76,14 +89,15 @@ public final class Args {
   private static final JCommander.Builder newJCommanderBuilder() {
     return JCommander.newBuilder()
         .atFileCharset(Main.charset)
+        .columnSize(100)
         .programName(NAME_OF_EXECUTABLE);
   }
 
   @ThreadSafe
   private static final class LoggingLevelConverter implements IStringConverter<Level> {
-    private static final Set<Level> validValues = ImmutableSet.of(Level.OFF, Level.ERROR, Level.WARN, Level.DEBUG);
+    private static final Set<Level> validValues = ImmutableSet.of(Level.OFF, Level.ERROR, Level.WARN, Level.INFO, Level.DEBUG);
 
-    public LoggingLevelConverter() {
+    private LoggingLevelConverter() {
     }
 
     @Override
@@ -94,6 +108,23 @@ public final class Args {
         if (!validValues.contains(result)) {
           throw new RuntimeException();
         }
+      } catch (final RuntimeException e) {
+        throw new ParameterException(String.format("Invalid value %s", v), e);
+      }
+      return result;
+    }
+  }
+
+  @ThreadSafe
+  private static final class MathContextConverter implements IStringConverter<MathContext> {
+    private MathContextConverter() {
+    }
+
+    @Override
+    public final MathContext convert(final String v) throws ParameterException {
+      final MathContext result;
+      try {
+        result = new MathContext(Integer.parseInt(v), RoundingMode.HALF_EVEN);
       } catch (final RuntimeException e) {
         throw new ParameterException(String.format("Invalid value %s", v), e);
       }

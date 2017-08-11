@@ -3,7 +3,6 @@ package stinc.male.exrpcalculator.logic;
 import javax.annotation.Nullable;
 import stinc.male.exrpcalculator.Main;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static stinc.male.exrpcalculator.logic.ExpressionParser.isEmptySymbol;
 
 public final class CalculationException extends RuntimeException {
@@ -43,19 +42,23 @@ public final class CalculationException extends RuntimeException {
 
   final void setExpression(final String expr) {
     checkNotNull(expr, "The argument %s must not be null", "expr");
-    checkState(this.expr == null, "Expression has already been set");
+    if (this.expr != null) {
+      throw new Error(String.format("%s has already been set", "expr"));
+    }
     this.expr = expr;
   }
 
   public final String description() {
-    checkState(this.expr != null, "Expression has not been set");
+    if (this.expr == null) {
+      throw new Error(String.format("%s has not been set", "expr"));
+    }
     return description(problemIdx, expr);
   }
 
   private static final String description(final int problemIdx, final String expr) {
     final String result;
     if (problemIdx < 0) {
-      result = String.format("Can not calculate expression: %s", expr);
+      result = String.format("Can not calculate expression:%s%s", Main.LINE_SEPARATOR, expr);
     } else {
       final String spaces;
       {

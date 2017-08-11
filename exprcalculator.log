@@ -1,0 +1,136 @@
+[DEBUG][2017-08-11T05:18:46.711+0300][main][stinc.male.exrpcalculator.Main] Application start
+[DEBUG][2017-08-11T05:18:46.713+0300][main][stinc.male.exrpcalculator.Main] Arguments {loggingLevel=DEBUG, mc=precision=7 roundingMode=HALF_EVEN}
+[INFO ][2017-08-11T05:18:46.713+0300][main][stinc.male.exrpcalculator.Main] Expression to calculate 'let(a, 5, let(b, mult(a, 10), add(b, a)))'
+[DEBUG][2017-08-11T05:18:46.714+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] Calculating 'let(a, 5, let(b, mult(a, 10), add(b, a)))'
+[DEBUG][2017-08-11T05:18:46.715+0300][main][stinc.male.exrpcalculator.logic.ExpressionParser] Parsing 'let(a, 5, let(b, mult(a, 10), add(b, a)))'
+[DEBUG][2017-08-11T05:18:46.761+0300][main][stinc.male.exrpcalculator.logic.ExpressionParser] Parsing result for 'let(a, 5, let(b, mult(a, 10), add(b, a)))' is
+Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null}
+Word{word='a', type=LITERAL, position=4, ltype=OPERAND_VAR, value=null}
+Word{word='5', type=NUMERIC, position=7, ltype=OPERAND, value=5}
+Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null}
+Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null}
+Word{word='mult', type=LITERAL, position=17, ltype=OPERATOR_MULT, value=null}
+Word{word='a', type=LITERAL, position=22, ltype=OPERAND_VAR, value=null}
+Word{word='10', type=NUMERIC, position=25, ltype=OPERAND, value=10}
+Word{word=')', type=CLOSING_BRACKET, position=27, ltype=CALCULATION, value=null}
+Word{word='add', type=LITERAL, position=30, ltype=OPERATOR_ADD, value=null}
+Word{word='b', type=LITERAL, position=34, ltype=OPERAND_VAR, value=null}
+Word{word='a', type=LITERAL, position=37, ltype=OPERAND_VAR, value=null}
+Word{word=')', type=CLOSING_BRACKET, position=38, ltype=CALCULATION, value=null}
+Word{word=')', type=CLOSING_BRACKET, position=39, ltype=CALCULATION, value=null}
+Word{word=')', type=CLOSING_BRACKET, position=40, ltype=CALCULATION, value=null}
+[DEBUG][2017-08-11T05:18:46.762+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null},
+stack=Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null},
+context={}
+[DEBUG][2017-08-11T05:18:46.762+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='a', type=LITERAL, position=4, ltype=OPERAND_VAR, value=null},
+stack=Word{word='a', type=LITERAL, position=4, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null},
+context={}
+[DEBUG][2017-08-11T05:18:46.763+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='5', type=NUMERIC, position=7, ltype=OPERAND, value=5},
+stack=,
+context={a=5}
+[DEBUG][2017-08-11T05:18:46.763+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null},
+stack=Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null},
+context={a=5}
+[DEBUG][2017-08-11T05:18:46.763+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null},
+stack=Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null},
+context={a=5}
+[DEBUG][2017-08-11T05:18:46.763+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='mult', type=LITERAL, position=17, ltype=OPERATOR_MULT, value=null},
+stack=Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null},
+context={a=5}
+[DEBUG][2017-08-11T05:18:46.763+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='a', type=LITERAL, position=22, ltype=OPERAND_VAR, value=null},
+stack=Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null},
+context={a=5}
+[DEBUG][2017-08-11T05:18:46.763+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='10', type=NUMERIC, position=25, ltype=OPERAND, value=10},
+stack=,
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.764+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] Calculating intermediate result
+word=Word{word=')', type=CLOSING_BRACKET, position=27, ltype=CALCULATION, value=null},
+stack=Word{word='10', type=NUMERIC, position=25, ltype=OPERAND, value=10}
+Word{word='a', type=LITERAL, position=22, ltype=OPERAND_VAR, value=null}
+Word{word='mult', type=LITERAL, position=17, ltype=OPERATOR_MULT, value=null}
+Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null}
+Word{word='5', type=NUMERIC, position=7, ltype=OPERAND, value=5}
+Word{word='a', type=LITERAL, position=4, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null},
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.764+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] operator=Word{word='mult', type=LITERAL, position=17, ltype=OPERATOR_MULT, value=null}, reversedOperands=[Word{word='10', type=NUMERIC, position=25, ltype=OPERAND, value=10}, Word{word='a', type=LITERAL, position=22, ltype=OPERAND_VAR, value=null}]
+[DEBUG][2017-08-11T05:18:46.764+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] intermediate result=Word{word='mult', type=NUMERIC, position=17, ltype=OPERAND, value=50}
+[DEBUG][2017-08-11T05:18:46.764+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='mult', type=NUMERIC, position=17, ltype=OPERAND, value=50},
+stack=,
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.764+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='add', type=LITERAL, position=30, ltype=OPERATOR_ADD, value=null},
+stack=,
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.765+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='b', type=LITERAL, position=34, ltype=OPERAND_VAR, value=null},
+stack=,
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.765+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='a', type=LITERAL, position=37, ltype=OPERAND_VAR, value=null},
+stack=,
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.765+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] Calculating intermediate result
+word=Word{word=')', type=CLOSING_BRACKET, position=38, ltype=CALCULATION, value=null},
+stack=Word{word='a', type=LITERAL, position=37, ltype=OPERAND_VAR, value=null}
+Word{word='b', type=LITERAL, position=34, ltype=OPERAND_VAR, value=null}
+Word{word='add', type=LITERAL, position=30, ltype=OPERATOR_ADD, value=null}
+Word{word='mult', type=NUMERIC, position=17, ltype=OPERAND, value=50}
+Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null}
+Word{word='5', type=NUMERIC, position=7, ltype=OPERAND, value=5}
+Word{word='a', type=LITERAL, position=4, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null},
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.765+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] operator=Word{word='add', type=LITERAL, position=30, ltype=OPERATOR_ADD, value=null}, reversedOperands=[Word{word='a', type=LITERAL, position=37, ltype=OPERAND_VAR, value=null}, Word{word='b', type=LITERAL, position=34, ltype=OPERAND_VAR, value=null}]
+[DEBUG][2017-08-11T05:18:46.765+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] intermediate result=Word{word='add', type=NUMERIC, position=30, ltype=OPERAND, value=15}
+[DEBUG][2017-08-11T05:18:46.765+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='add', type=NUMERIC, position=30, ltype=OPERAND, value=15},
+stack=,
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.765+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] Calculating intermediate result
+word=Word{word=')', type=CLOSING_BRACKET, position=39, ltype=CALCULATION, value=null},
+stack=Word{word='add', type=NUMERIC, position=30, ltype=OPERAND, value=15}
+Word{word='mult', type=NUMERIC, position=17, ltype=OPERAND, value=50}
+Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null}
+Word{word='5', type=NUMERIC, position=7, ltype=OPERAND, value=5}
+Word{word='a', type=LITERAL, position=4, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null},
+context={a=5, b=10}
+[DEBUG][2017-08-11T05:18:46.766+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] operator=Word{word='let', type=LITERAL, position=10, ltype=OPERATOR_LET, value=null}, reversedOperands=[Word{word='add', type=NUMERIC, position=30, ltype=OPERAND, value=15}, Word{word='mult', type=NUMERIC, position=17, ltype=OPERAND, value=50}, Word{word='b', type=LITERAL, position=14, ltype=OPERAND_VAR, value=null}]
+[DEBUG][2017-08-11T05:18:46.766+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] intermediate result=Word{word='let', type=NUMERIC, position=10, ltype=OPERAND, value=15}
+[DEBUG][2017-08-11T05:18:46.766+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='let', type=NUMERIC, position=10, ltype=OPERAND, value=15},
+stack=,
+context={a=5}
+[DEBUG][2017-08-11T05:18:46.766+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] Calculating intermediate result
+word=Word{word=')', type=CLOSING_BRACKET, position=40, ltype=CALCULATION, value=null},
+stack=Word{word='let', type=NUMERIC, position=10, ltype=OPERAND, value=15}
+Word{word='5', type=NUMERIC, position=7, ltype=OPERAND, value=5}
+Word{word='a', type=LITERAL, position=4, ltype=OPERAND_VAR, value=null}
+Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null},
+context={a=5}
+[DEBUG][2017-08-11T05:18:46.766+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] operator=Word{word='let', type=LITERAL, position=0, ltype=OPERATOR_LET, value=null}, reversedOperands=[Word{word='let', type=NUMERIC, position=10, ltype=OPERAND, value=15}, Word{word='5', type=NUMERIC, position=7, ltype=OPERAND, value=5}, Word{word='a', type=LITERAL, position=4, ltype=OPERAND_VAR, value=null}]
+[DEBUG][2017-08-11T05:18:46.766+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] intermediate result=Word{word='let', type=NUMERIC, position=0, ltype=OPERAND, value=15}
+[DEBUG][2017-08-11T05:18:46.766+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] letOperatorStack
+word=Word{word='let', type=NUMERIC, position=0, ltype=OPERAND, value=15},
+stack=,
+context={}
+[DEBUG][2017-08-11T05:18:46.766+0300][main][stinc.male.exrpcalculator.logic.ExpressionCalculator] Calculation result for 'let(a, 5, let(b, mult(a, 10), add(b, a)))' is 15
+[INFO ][2017-08-11T05:18:46.767+0300][main][stinc.male.exrpcalculator.Main] Calculation result 15, calculation time 52ms
+[DEBUG][2017-08-11T05:18:46.768+0300][main][stinc.male.exrpcalculator.Main] Application stop

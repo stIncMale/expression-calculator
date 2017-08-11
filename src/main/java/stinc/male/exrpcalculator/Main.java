@@ -3,8 +3,11 @@ package stinc.male.exrpcalculator;
 import com.beust.jcommander.ParameterException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Locale;
 import javax.annotation.Nullable;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -19,6 +22,7 @@ import stinc.male.exrpcalculator.logic.ExpressionCalculator;
  * TODO
  * Notes:
  * - the last expression in the examples is missing the last closing bracket
+ * - variables can not be named same as operations
  */
 public final class Main {
   public static final int EXIT_STATUS_FAILURE = 1;
@@ -46,17 +50,24 @@ public final class Main {
       final InputAndArgs inputAndArgs = new InputAndArgs(args, System.in);
       Configurator.setAllLevels(APPLICATION_ROOT_LOGGER_NAME, inputAndArgs.getArguments().getLoggingLevel());
       logger.debug("Application start");
-      logger.debug("Arguments={}", inputAndArgs.getArguments());
-      logger.debug("Expression to calculate='{}'", inputAndArgs.getInput());
-      final ExpressionCalculator calc = new ExpressionCalculator();
-      System.out.println(calc.calculate(inputAndArgs.getInput())
-          .toPlainString());
+      logger.debug("Arguments {}", inputAndArgs.getArguments());
+      logger.info("Expression to calculate '{}'", inputAndArgs.getInput());
+      final MathContext mc = inputAndArgs.getArguments().getMathContext();
+      final ExpressionCalculator calculator = new ExpressionCalculator(new MathContext(
+          mc.getPrecision() == 0 ? 0 : inputAndArgs.getArguments().getMathContext().getPrecision() + 1,//by using increased precision and then rounding we can achieve mult(div(1, 3), 3) == 1 instead of 0.999...
+          inputAndArgs.getArguments().getMathContext().getRoundingMode()));
+      final long startNanos = System.nanoTime();
+      final BigDecimal result = calculator.calculate(inputAndArgs.getInput())
+          .round(inputAndArgs.getArguments().getMathContext());
+      final String strResult = result.toPlainString();
+      logger.info("Calculation result {}, calculation time {}ms", strResult, Duration.ofNanos(System.nanoTime() - startNanos).toMillis());
+      System.out.println(strResult);
     } catch (final ParameterException e) {
       System.err.println(e.getLocalizedMessage());
       Args.printUsage();
       exitStatus = EXIT_STATUS_FAILURE;
     } catch (final CalculationException e) {
-      System.err.println(e.getLocalizedMessage());
+      System.err.println(e.description());
       Args.printUsage();
       logger.error(null, e);
       exitStatus = EXIT_STATUS_FAILURE;

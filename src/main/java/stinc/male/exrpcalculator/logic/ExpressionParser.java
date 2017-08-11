@@ -1,15 +1,18 @@
 package stinc.male.exrpcalculator.logic;
 
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stinc.male.exrpcalculator.Main;
 import stinc.male.exrpcalculator.logic.Word.Type;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static stinc.male.exrpcalculator.logic.Word.Type.CLOSING_BRACKET;
 import static stinc.male.exrpcalculator.logic.Word.Type.COMMA;
@@ -21,7 +24,13 @@ import static stinc.male.exrpcalculator.logic.Word.Type.OPENING_BRACKET;
 public final class ExpressionParser {
   private static final Logger logger = LoggerFactory.getLogger(ExpressionParser.class);
 
-  static final List<Word> parse(@Nullable final String expr) throws CalculationException {
+  /**
+   * This can be {@linkplain Stream streamified} to reduce memory footprint.
+   *
+   * @throws CalculationException
+   */
+  static final List<Word> parse(@Nullable final String expr, final MathContext mc) throws CalculationException {
+    checkNotNull(mc, "The argument %s must not be null", "mc");
     logger.debug("Parsing '{}'", expr);
     final List<Word> result;
     if (StringUtils.isBlank(expr)) {
@@ -39,7 +48,7 @@ public final class ExpressionParser {
               ? ' '
               : expr.charAt(idx);
           if (idx == 0) {
-            wordInfo = new WordInfo(idx, symbol);
+            wordInfo = new WordInfo(idx, symbol, mc);
           } else {
             switch (wordInfo.type) {
               case EMPTY:
@@ -62,7 +71,7 @@ public final class ExpressionParser {
                   //continue reading the current word
                 } else if (isTrailerSymbol(symbol)) {
                   result.add(wordInfo.buildWordAndStartNew(idx, symbol, expr));
-                } else {
+                } else {//invalid symbol
                   throw new CalculationException(problemIdx, expr, null, null);
                 }
                 break;
@@ -72,13 +81,13 @@ public final class ExpressionParser {
                   //continue reading the current word
                 } else if (isTrailerSymbol(symbol)) {
                   result.add(wordInfo.buildWordAndStartNew(idx, symbol, expr));
-                } else {
+                } else {//invalid symbol
                   throw new CalculationException(problemIdx, expr, null, null);
                 }
                 break;
               }
               default: {
-                throw new Error("Not all word types are considered");
+                throw new Error(String.format("%s is not considered", wordInfo.type));
               }
             }
             if (endOfExpression) {
@@ -134,14 +143,16 @@ public final class ExpressionParser {
   private static final class WordInfo {
     private int startIdx;
     private Word.Type type;
+    private final MathContext mc;
 
-    private WordInfo(final int startIdx, final char startingSymbol) {
+    private WordInfo(final int startIdx, final char startingSymbol, final MathContext mc) {
       this.startIdx = startIdx;
       this.type = wordTypeFor(startingSymbol);
+      this.mc = mc;
     }
 
     private final Word buildWordAndStartNew(final int startIdx, final char startingSymbol, final String expr) {
-      final Word result = new Word(expr.substring(this.startIdx, startIdx), type, this.startIdx);
+      final Word result = new Word(expr.substring(this.startIdx, startIdx), type, this.startIdx, mc);
       startNew(startIdx, startingSymbol);
       return result;
     }
