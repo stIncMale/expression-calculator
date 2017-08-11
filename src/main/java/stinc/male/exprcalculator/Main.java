@@ -50,8 +50,8 @@ public final class Main {
       logger.info("Expression to calculate '{}'", inputAndArgs.getInput());
       final MathContext mc = inputAndArgs.getArguments().getMathContext();
       final ExpressionCalculator calculator = new ExpressionCalculator(new MathContext(
-          mc.getPrecision() == 0 ? 0 : inputAndArgs.getArguments().getMathContext().getPrecision() + 1,//by using increased precision and then rounding we can achieve mult(div(1, 3), 3) == 1 instead of 0.999...
-          inputAndArgs.getArguments().getMathContext().getRoundingMode()));
+          mc.getPrecision() == 0 ? 0 : mc.getPrecision() + 1,//by using increased precision and then rounding we can achieve mult(div(1, 3), 3) == 1 instead of 0.999...
+          mc.getRoundingMode()));
       final BigDecimal result = calculator.calculate(inputAndArgs.getInput())
           .round(inputAndArgs.getArguments().getMathContext());
       final String strResult = result.toPlainString();

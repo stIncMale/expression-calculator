@@ -125,21 +125,15 @@ public final class ExpressionCalculator {
     return result;
   }
 
-  private final Word calculateIntermediateResult(
-      final Word word,
+  private static final Word calculateIntermediateResult(
+      final Word calculationWord,
       final Deque<Word> stack,
       final Deque<LetOperatorScope> letOperatorScopesStack,
       final Map<String, BigDecimal> context,
       final List<Word> reversedOperands,
-      final MathContext mc) {
-    checkNotNull(word, "The argument %s must not be null", "word");
-    checkNotNull(stack, "The argument %s must not be null", "stack");
-    checkNotNull(letOperatorScopesStack, "The argument %s must not be null", "letOperatorScopesStack");
-    checkNotNull(context, "The argument %s must not be null", "context");
-    checkNotNull(reversedOperands, "The argument %s must not be null", "reversedOperands");
-    checkNotNull(mc, "The argument %s must not be null", "mc");
+      final MathContext mc) throws CalculationException {
     if (logger.isDebugEnabled()) {
-      logger.debug("Calculating intermediate result for {}, stack{}[{}],{}letOperatorScopesStack{}[{}]{}context {}", word, LN,
+      logger.debug("Calculating intermediate result for {}, stack{}[{}],{}letOperatorScopesStack{}[{}]{}context {}", calculationWord, LN,
           stack.stream()
               .map(Word::toString)
               .collect(Collectors.joining(LN)), LN,
@@ -165,58 +159,15 @@ public final class ExpressionCalculator {
       }
     }
     if (wordFromStack == null) {
-      throw new CalculationException(word);
+      throw new CalculationException(calculationWord);
     } else {
       final Word operator = wordFromStack;
       stack.pop();//remove operator from stack
       logger.debug("Calculating intermediate result for operator {}, reversed operands {}", operator, reversedOperands);
       if (operator.getLogicalType().isCalculationSupported()) {//OPERATOR_ADD, SUB, MULT, DIV
-        final BigDecimal intermediateResult;
-        if (reversedOperands.size() < 2) {
-          throw new CalculationException(word);
-        } else if (reversedOperands.size() > 2) {
-          throw new CalculationException(reversedOperands.get(reversedOperands.size() - 3));
-        } else {//exactly 2 operands
-          final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
-          final Word operand2 = reversedOperands.get(reversedOperands.size() - 2);
-          try {
-            intermediateResult = operator.getLogicalType().calculate(
-                operandValue(operand1, context),
-                operandValue(operand2, context),
-                mc);
-          } catch (final RuntimeException e) {
-            throw new CalculationException(operator);
-          }
-        }
-        result = new Word(operator, intermediateResult);
+        result = calculateIntermediateResultForCalculableOperator(calculationWord, operator, reversedOperands, context, mc);
       } else {//OPERATOR_LET
-        final BigDecimal intermediateResult;
-        if (reversedOperands.size() < 3) {
-          throw new CalculationException(word);
-        } else if (reversedOperands.size() > 3) {
-          throw new CalculationException(reversedOperands.get(reversedOperands.size() - 4));
-        } else {//exactly 3 operands
-          final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
-          if (operand1.getLogicalType() != OPERAND_VAR) {
-            throw new CalculationException(operand1);
-          }
-          final Word operand2 = reversedOperands.get(reversedOperands.size() - 2);
-          if (operand2.getLogicalType() != OPERAND) {
-            throw new CalculationException(operand2);
-          }
-          final Word operand3 = reversedOperands.get(reversedOperands.size() - 3);
-          if (operand3.getLogicalType() != OPERAND) {
-            throw new CalculationException(operand3);
-          }
-          if (context.remove(operand1.getWord()) == null) {
-            throw new Error(String.format("context=%s does not contain variable %s", context, operand1.getWord()));
-          } else {
-            logger.debug("New context ({} was removed) {}", operand1.getWord(), context);
-          }
-          letOperatorScopesStack.pop();
-          intermediateResult = operand3.getValue();
-        }
-        result = new Word(operator, intermediateResult);
+        result = calculateIntermediateResultForLetOperator(calculationWord, operator, reversedOperands, context, letOperatorScopesStack);
       }
     }
     if (logger.isDebugEnabled()) {
@@ -231,6 +182,67 @@ public final class ExpressionCalculator {
           context);
     }
     return result;
+  }
+
+  private static final Word calculateIntermediateResultForCalculableOperator(
+      final Word calculationWord,
+      final Word operator,
+      final List<Word> reversedOperands,
+      final Map<String, BigDecimal> context,
+      final MathContext mc) throws CalculationException {
+    final BigDecimal intermediateResult;
+    if (reversedOperands.size() < 2) {
+      throw new CalculationException(calculationWord);
+    } else if (reversedOperands.size() > 2) {
+      throw new CalculationException(reversedOperands.get(reversedOperands.size() - 3));
+    } else {//exactly 2 operands
+      final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
+      final Word operand2 = reversedOperands.get(reversedOperands.size() - 2);
+      try {
+        intermediateResult = operator.getLogicalType().calculate(
+            operandValue(operand1, context),
+            operandValue(operand2, context),
+            mc);
+      } catch (final RuntimeException e) {
+        throw new CalculationException(operator);
+      }
+    }
+    return new Word(operator, intermediateResult);
+  }
+
+  private static final Word calculateIntermediateResultForLetOperator(
+      final Word calculationWord,
+      final Word operator,
+      final List<Word> reversedOperands,
+      final Map<String, BigDecimal> context,
+      final Deque<LetOperatorScope> letOperatorScopesStack) throws CalculationException {
+    final BigDecimal intermediateResult;
+    if (reversedOperands.size() < 3) {
+      throw new CalculationException(calculationWord);
+    } else if (reversedOperands.size() > 3) {
+      throw new CalculationException(reversedOperands.get(reversedOperands.size() - 4));
+    } else {//exactly 3 operands
+      final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
+      if (operand1.getLogicalType() != OPERAND_VAR) {
+        throw new CalculationException(operand1);
+      }
+      final Word operand2 = reversedOperands.get(reversedOperands.size() - 2);
+      if (operand2.getLogicalType() != OPERAND) {
+        throw new CalculationException(operand2);
+      }
+      final Word operand3 = reversedOperands.get(reversedOperands.size() - 3);
+      if (operand3.getLogicalType() != OPERAND) {
+        throw new CalculationException(operand3);
+      }
+      if (context.remove(operand1.getWord()) == null) {
+        throw new Error(String.format("context=%s does not contain variable %s", context, operand1.getWord()));
+      } else {
+        logger.debug("New context ({} was removed) {}", operand1.getWord(), context);
+      }
+      letOperatorScopesStack.pop();
+      intermediateResult = operand3.getValue();
+    }
+    return new Word(operator, intermediateResult);
   }
 
   private static final BigDecimal operandValue(final Word operand, final Map<String, BigDecimal> context) throws CalculationException {
