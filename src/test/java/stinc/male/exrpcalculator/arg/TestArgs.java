@@ -10,42 +10,42 @@ public final class TestArgs {
   }
 
   @Test
-  public final void testLoggingLevel1() {
+  public final void loggingLevel1() {
     assertEquals(Level.ERROR, new Args().getLoggingLevel());//default value
   }
 
   @Test
-  public final void testLoggingLevel2() {
+  public final void loggingLevel2() {
     assertEquals(Level.OFF, new Args(new String[] {"-v", "OFF"}).getLoggingLevel());
   }
 
   @Test
-  public final void testLoggingLevel3() {
+  public final void loggingLevel3() {
     assertEquals(Level.WARN, new Args(new String[] {"-log", "warn"}).getLoggingLevel());
   }
 
   @Test(expected = ParameterException.class)
-  public final void testLoggingLevel4() {
+  public final void loggingLevel4() {
     new Args(new String[] {"-v"});
   }
 
   @Test(expected = ParameterException.class)
-  public final void testLoggingLevel5() {
+  public final void loggingLevel5() {
     new Args(new String[] {"-log", ""});
   }
 
   @Test(expected = ParameterException.class)
-  public final void testLoggingLevel6() {
+  public final void loggingLevel6() {
     new Args(new String[] {"-v", "fck"});
   }
 
   @Test
-  public final void testConstructor1() {
+  public final void constructor1() {
     assertEquals(Level.OFF, new Args(new String[] {"-v", "OFF", "input"}, 0, 1).getLoggingLevel());
   }
 
   @Test(expected = ParameterException.class)
-  public final void testConstructor2() {
+  public final void constructor2() {
     new Args(new String[] {"-v", "OFF", "input"}, 0, 2);
   }
 }

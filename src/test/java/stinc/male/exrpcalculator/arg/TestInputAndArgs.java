@@ -10,21 +10,21 @@ public final class TestInputAndArgs {
   }
 
   @Test
-  public final void testConstructor1() {
+  public final void constructor1() {
     final InputAndArgs o = new InputAndArgs(new String[] {"-v", "OFF", "input"}, null);
     assertEquals("input", o.getInput());
     assertEquals(Level.OFF, o.getArguments().getLoggingLevel());
   }
 
   @Test
-  public final void testConstructor2() {
+  public final void constructor2() {
     final InputAndArgs o = new InputAndArgs(new String[] {"-v"}, null);
     assertEquals("-v", o.getInput());
     assertEquals(Level.ERROR, o.getArguments().getLoggingLevel());
   }
 
   @Test(expected = ParameterException.class)
-  public final void testConstructor3() {
+  public final void constructor3() {
     new InputAndArgs(new String[] {"-v", "OFF"}, null);
   }
 }

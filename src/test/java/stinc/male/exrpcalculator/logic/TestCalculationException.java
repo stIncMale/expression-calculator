@@ -9,7 +9,7 @@ public final class TestCalculationException {
   }
 
   @Test
-  public final void testDescription1() {
+  public final void description1() {
     final String expected =
         "Problem with '5' at index 5:" + LN
       + "0123456789" + LN
@@ -18,7 +18,7 @@ public final class TestCalculationException {
   }
 
   @Test
-  public final void testDescription2() {
+  public final void description2() {
     final String expected =
         "Problem with '5' at index 5:" + LN
             + "\t1\n3456789" + LN

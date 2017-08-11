@@ -17,7 +17,7 @@ public final class TestExpressionParser {
   }
 
   @Test
-  public final void testWords1() {//TODO rename test methods: remove test word
+  public final void parse1() {
     final String expr = "let(a, let(b, 10, add(b, b)), let(b, 20, add(a,b)))";
     final List<Word> words = parse(expr, mc);
     assertFalse(words.stream()
@@ -30,7 +30,7 @@ public final class TestExpressionParser {
   }
 
   @Test
-  public final void testWords2() {
+  public final void parse2() {
     final String expr = "let ( \n _a_d   , -5.67, let(bw, mult \t (_a_d, 10  ), add(bw, _a_d)))";
     final List<Word> words = parse(expr, mc);
     assertFalse(words.stream()
@@ -44,22 +44,22 @@ public final class TestExpressionParser {
   }
 
   @Test(expected = CalculationException.class)
-  public final void testWords3() {
+  public final void parse3() {
     parse("le-t(a, 10, add(a,1))", mc);
   }
 
   @Test(expected = CalculationException.class)
-  public final void testWordsBracketsBalance1() {
+  public final void parseBracketsBalance1() {
     parse("(()", mc);
   }
 
   @Test()
-  public final void testWordsBracketsBalance2() {
+  public final void parseBracketsBalance2() {
     parse("(()(()))", mc);
   }
 
   @Test(expected = CalculationException.class)
-  public final void testWordsBracketsBalance3() {
+  public final void parseBracketsBalance3() {
     parse(")(", mc);
   }
 }

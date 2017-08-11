@@ -37,9 +37,9 @@ public final class TestExpressionCalculator {
     assertEquals(1, calc.calculate("let(a, 1, add(let(b, 2, div(b, 1)), -1))").intValueExact());
   }
 
-//  @Test(expected = CalculationException.class)
-//  public final void calculate5() {
-//    final ExpressionCalculator calc = new ExpressionCalculator(MathContext.DECIMAL32);
-//    assertEquals(1, calc.calculate("let(a, 1, add(let(a, 2, div(a, 1)), -1))").intValueExact());
-//  }
+  @Test(expected = CalculationException.class)
+  public final void calculate5() {
+    final ExpressionCalculator calc = new ExpressionCalculator(MathContext.DECIMAL32);
+    calc.calculate("let(a, 1, add(let(a, 2, div(a, 1)), -1))").intValueExact();
+  }
 }
