@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stinc.male.exrpcalculator.Main;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static stinc.male.exrpcalculator.Main.LN;
 import static stinc.male.exrpcalculator.logic.Word.LogicalType.OPERAND;
 import static stinc.male.exrpcalculator.logic.Word.LogicalType.OPERAND_VAR;
 import static stinc.male.exrpcalculator.logic.Word.LogicalType.OPERATOR_LET;
@@ -23,7 +23,7 @@ public final class ExpressionCalculator {
 
   private final MathContext mc;
   private final Deque<Word> stack;
-  private final LetOperatorStack letOperatorStack;
+  private final Deque<LetOperatorScope> letOperatorScopesStack;
   private final LinkedHashMap<String, BigDecimal> context;
   final List<Word> reversedOperands;
 
@@ -31,12 +31,12 @@ public final class ExpressionCalculator {
     checkNotNull(mc, "The argument %s must not be null", "mc");
     this.mc = mc;
     stack = new ArrayDeque<>();
-    letOperatorStack = new LetOperatorStack();
+    letOperatorScopesStack = new ArrayDeque<>();
     context = new LinkedHashMap<>();
     reversedOperands = new ArrayList<>();
   }
 
-  public final BigDecimal calculate(final String expr) throws CalculationException {//TODO test multiple calls
+  public final BigDecimal calculate(final String expr) throws CalculationException {
     checkNotNull(expr, "The argument %s must not be null", "expr");
     logger.debug("Calculating '{}'", expr);
     final BigDecimal result;
@@ -51,7 +51,7 @@ public final class ExpressionCalculator {
       throw new CalculationException(expr, null, e);
     } finally {
       stack.clear();
-      letOperatorStack.clear();
+      letOperatorScopesStack.clear();
       context.clear();
       reversedOperands.clear();
     }
@@ -61,6 +61,8 @@ public final class ExpressionCalculator {
 
   private final BigDecimal calculate(final ParsedExpression parsedExpr) throws CalculationException {
     final List<Word> words = parsedExpr.getWords();
+    @Nullable
+    Word lastSeenOperator = null;
     for (int wordIdx = 0; wordIdx < words.size(); wordIdx++) {
       final Word word = words.get(wordIdx);
       if (wordIdx == 0 && !word.getLogicalType().isOperator()) {
@@ -68,29 +70,46 @@ public final class ExpressionCalculator {
       }
       try {
         switch (word.getLogicalType()) {//TODO put all cases as one?
-          case OPERATOR_LET:
+          case OPERATOR_LET: {
+            lastSeenOperator = word;
+            stack.push(word);
+            letOperatorScopesStack.push(new LetOperatorScope(word));
+            break;
+          }
           case OPERATOR_ADD:
           case OPERATOR_SUB:
           case OPERATOR_MULT:
           case OPERATOR_DIV:{
+            lastSeenOperator = word;
             stack.push(word);
-            letOperatorStack.pushToStackOrPutToContext(word, context);
             break;
           }
           case OPERAND: {
             stack.push(word);
-            letOperatorStack.pushToStackOrPutToContext(word, context);
+            if (lastSeenOperator != null && lastSeenOperator.getLogicalType() == OPERATOR_LET && !letOperatorScopesStack.isEmpty()) {
+              if (letOperatorScopesStack.peek().register(word, context)) {
+//                letOperatorScopesStack.pop();
+              }
+            }
             break;
           }
           case OPERAND_VAR: {
             stack.push(word);
-            letOperatorStack.pushToStackOrPutToContext(word, context);
+            if (lastSeenOperator != null && lastSeenOperator.getLogicalType() == OPERATOR_LET && !letOperatorScopesStack.isEmpty()) {
+              if (letOperatorScopesStack.peek().register(word, context)) {
+//                letOperatorScopesStack.pop();
+              }
+            }
             break;
           }
           case CALCULATION: {
-            final Word intermediateResult = calculate(word, stack, context, reversedOperands, mc);
+            final Word intermediateResult = calculate(word, stack, letOperatorScopesStack, context, reversedOperands, mc);
             stack.push(intermediateResult);
-            letOperatorStack.pushToStackOrPutToContext(intermediateResult, context);
+            if (!letOperatorScopesStack.isEmpty()) {
+              if (letOperatorScopesStack.peek().register(intermediateResult, context)) {
+//                letOperatorScopesStack.pop();
+              }
+            }
             break;
           }
           default: {
@@ -107,9 +126,9 @@ public final class ExpressionCalculator {
     if (stack.isEmpty()) {
       throw new CalculationException(parsedExpr.getExpression(), null, null);
     } else if (stack.size() > 1) {
-      throw new CalculationException(stack.pop().getPosition(), parsedExpr.getExpression(), null, null);
+      throw new CalculationException(stack.peek().getPosition(), parsedExpr.getExpression(), null, null);
     } else {//exactly one element in the stack
-      final Word lastWord = stack.pop();
+      final Word lastWord = stack.peek();
       if (lastWord.getLogicalType() == OPERAND) {
         result = lastWord.getValue();
       } else {
@@ -123,20 +142,25 @@ public final class ExpressionCalculator {
   private final Word calculate(
       final Word word,
       final Deque<Word> stack,
+      final Deque<LetOperatorScope> letOperatorScopesStack,
       final LinkedHashMap<String, BigDecimal> context,
       final List<Word> reversedOperands,
       final MathContext mc) {
     checkNotNull(word, "The argument %s must not be null", "word");
     checkNotNull(stack, "The argument %s must not be null", "stack");
+    checkNotNull(letOperatorScopesStack, "The argument %s must not be null", "letOperatorScopesStack");
     checkNotNull(context, "The argument %s must not be null", "context");
     checkNotNull(reversedOperands, "The argument %s must not be null", "reversedOperands");
     checkNotNull(mc, "The argument %s must not be null", "mc");
     if (logger.isDebugEnabled()) {
-      logger.debug("Calculating intermediate result{}word={},{}stack={},{}context={}", Main.LINE_SEPARATOR,
-          word, Main.LINE_SEPARATOR,
+      logger.debug("Calculating intermediate result for {}, stack{}[{}],{}letOperatorScopesStack{}[{}]{}context {}", word, LN,
           stack.stream()
               .map(Word::toString)
-              .collect(Collectors.joining(Main.LINE_SEPARATOR)), Main.LINE_SEPARATOR,
+              .collect(Collectors.joining(LN)), LN,
+          LN,
+          letOperatorScopesStack.stream()
+              .map(scope -> scope.operator.toString())
+              .collect(Collectors.joining(LN)), LN,
           context);
     }
     reversedOperands.clear();
@@ -144,12 +168,12 @@ public final class ExpressionCalculator {
     @Nullable
     Word wordFromStack;
     for (wordFromStack = stack.peek();
-        wordFromStack != null && !wordFromStack.getLogicalType().isOperator();) {
+        wordFromStack != null && !wordFromStack.getLogicalType().isOperator();
+        wordFromStack = stack.peek()) {
       if (wordFromStack.getLogicalType() == OPERAND
           || wordFromStack.getLogicalType() == OPERAND_VAR) {
         reversedOperands.add(wordFromStack);
         stack.pop();//remove wordFromStack from stack
-        wordFromStack = stack.peek();
       } else {
         throw new CalculationException(wordFromStack.getPosition(), null, null, null);
       }
@@ -159,7 +183,7 @@ public final class ExpressionCalculator {
     } else {
       final Word operator = wordFromStack;
       stack.pop();//remove operator from stack
-      logger.debug("operator={}, reversedOperands={}", operator, reversedOperands);
+      logger.debug("Calculating intermediate result for operator {}, reversed operands {}", operator, reversedOperands);
       if (operator.getLogicalType().isCalculationSupported()) {//OPERATOR_ADD, SUB, MULT, DIV
         final BigDecimal intermediateResult;
         if (reversedOperands.size() < 2) {
@@ -196,13 +220,26 @@ public final class ExpressionCalculator {
           }
           if (context.remove(operand1.getWord()) == null) {
             throw new Error(String.format("context=%s does not contain variable %s", context, operand1.getWord()));
+          } else {
+            logger.debug("New context ({} was removed) {}", operand1.getWord(), context);
           }
+          letOperatorScopesStack.pop();
           intermediateResult = operand3.getValue();
         }
         result = new Word(operator, intermediateResult);
       }
     }
-    logger.debug("intermediate result={}", result);
+    if (logger.isDebugEnabled()) {
+      logger.debug("Intermediate result {}, stack{}[{}],{}letOperatorScopesStack{}[{}]{}context {}", result, LN,
+          stack.stream()
+              .map(Word::toString)
+              .collect(Collectors.joining(LN)), LN,
+          LN,
+          letOperatorScopesStack.stream()
+              .map(scope -> scope.operator.toString())
+              .collect(Collectors.joining(LN)), LN,
+          context);
+    }
     return result;
   }
 
@@ -228,61 +265,43 @@ public final class ExpressionCalculator {
     return result;
   }
 
-  private final class LetOperatorStack {
-    private final Deque<Word> stack;
+  private static final class LetOperatorScope {
+    private final Word operator;//TODO remove?
+    @Nullable
+    private Word operandVar;
+    @Nullable
+    private Word operand;
 
-    private LetOperatorStack() {
-      stack = new ArrayDeque<>();
+    private LetOperatorScope(final Word operator) {
+      this.operator = operator;
+      operandVar = null;
     }
 
-    private boolean pushToStackOrPutToContext(final Word word, final Map<String, BigDecimal> context) throws CalculationException {
-      final boolean result;
-      @Nullable
-      final Word lastWord = stack.peek();
-      if (lastWord == null) {
-        if (word.getLogicalType() == OPERATOR_LET) {
-          stack.push(word);
-          result = false;
+    private boolean register(final Word word, final Map<String, BigDecimal> context) throws CalculationException {
+      final boolean contextUpdated;
+      if (operandVar == null) {//expecting OPERAND_VAR
+        if (word.getLogicalType() == OPERAND_VAR) {
+          operandVar = word;
+          contextUpdated = false;
         } else {
-          stack.clear();
-          result = false;
+          throw new CalculationException(word.getPosition(), null, null, null);
         }
-      } else if (lastWord.getLogicalType() == OPERATOR_LET && word.getLogicalType() == OPERAND_VAR) {
-        stack.push(word);
-        result = false;
-      } else if (lastWord.getLogicalType() == OPERAND_VAR) {
-        if (word.getLogicalType() == OPERAND) {//put in context
-          final String varName = lastWord.getWord();
-          if (context.containsKey(varName)) {//variable with the ame name has already been defined
-            throw new CalculationException(lastWord.getPosition(), null, null, null);
-          } else {
-            final BigDecimal varValue = word.getValue();
-            context.put(varName, varValue);
-            stack.clear();
-            result = true;
-          }
-        } else if (word.getLogicalType().isCalculationSupported()) {//OPERATOR_ADD, SUB, MULT, DIV
-          result = false;
+      } else if (word.getLogicalType() == OPERAND) {//expecting OPERAND and getting OPERAND
+        final String varName = operandVar.getWord();
+        if (context.containsKey(varName)) {//variable with the same name has already been defined
+//           throw new CalculationException(word.getPosition(), null, null, null);//TODO
+          contextUpdated = false;
         } else {
-          result = false;
+          operand = word;
+          final BigDecimal varValue = word.getValue();
+          context.put(varName, varValue);
+          contextUpdated = true;
+          logger.debug("New context ({} was added) {}", varName, context);
         }
-      } else {
-        stack.clear();
-        result = false;
+      } else {//expecting OPERAND but getting something invalid
+        throw new CalculationException(word.getPosition(), null, null, null);
       }
-      if (logger.isDebugEnabled()) {
-        logger.debug("letOperatorStack{}word={},{}stack={},{}context={}", Main.LINE_SEPARATOR,
-            word, Main.LINE_SEPARATOR,
-            stack.stream()
-                .map(Word::toString)
-                .collect(Collectors.joining(Main.LINE_SEPARATOR)), Main.LINE_SEPARATOR,
-            context);
-      }
-      return result;
-    }
-
-    private void clear() {
-      stack.clear();
+      return contextUpdated;
     }
   }
 }

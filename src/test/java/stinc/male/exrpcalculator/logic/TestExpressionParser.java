@@ -17,7 +17,7 @@ public final class TestExpressionParser {
   }
 
   @Test
-  public final void testWords1() {
+  public final void testWords1() {//TODO rename test methods: remove test word
     final String expr = "let(a, let(b, 10, add(b, b)), let(b, 20, add(a,b)))";
     final List<Word> words = parse(expr, mc);
     assertFalse(words.stream()

@@ -26,14 +26,17 @@ import stinc.male.exrpcalculator.logic.ExpressionCalculator;
  */
 public final class Main {
   public static final int EXIT_STATUS_FAILURE = 1;
-  public static final String LINE_SEPARATOR = "\n";
+  /**
+   * Line separator.
+   */
+  public static final String LN = "\n";
   public static final Charset charset = StandardCharsets.UTF_8;
   public static final Locale locale = Locale.ROOT;
   private static final String APPLICATION_ROOT_LOGGER_NAME = "stinc.male.exrpcalculator";
   private static final Logger logger;
 
   static {
-    System.setProperty("line.separator", LINE_SEPARATOR);//set line separator; according to JDK this is a standard property
+    System.setProperty("line.separator", LN);//set line separator; according to JDK this is a standard property
     try {//set charset for std streams
       System.setOut(new PrintStream(System.out, true, charset.name()));
       System.setErr(new PrintStream(System.err, true, charset.name()));
@@ -85,6 +88,6 @@ public final class Main {
   }
 
   private Main() {
-    throw new UnsupportedOperationException("This class is not dedigned to be instantiated");
+    throw new UnsupportedOperationException("This class is not designed to be instantiated");
   }
 }

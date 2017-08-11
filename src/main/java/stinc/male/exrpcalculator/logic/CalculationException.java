@@ -1,8 +1,8 @@
 package stinc.male.exrpcalculator.logic;
 
 import javax.annotation.Nullable;
-import stinc.male.exrpcalculator.Main;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static stinc.male.exrpcalculator.Main.LN;
 import static stinc.male.exrpcalculator.logic.ExpressionParser.isEmptySymbol;
 
 public final class CalculationException extends RuntimeException {
@@ -58,7 +58,7 @@ public final class CalculationException extends RuntimeException {
   private static final String description(final int problemIdx, final String expr) {
     final String result;
     if (problemIdx < 0) {
-      result = String.format("Can not calculate expression:%s%s", Main.LINE_SEPARATOR, expr);
+      result = String.format("Can not calculate expression:%s%s", LN, expr);
     } else {
       final String spaces;
       {
@@ -73,8 +73,8 @@ public final class CalculationException extends RuntimeException {
         }
         spaces = new String(spaceChars);
       }
-      result = String.format("Unexpected symbol '%s' at index %s:", expr.charAt(problemIdx), problemIdx) + Main.LINE_SEPARATOR
-          + expr + Main.LINE_SEPARATOR
+      result = String.format("Problem with '%s' at index %s:", expr.charAt(problemIdx), problemIdx) + LN
+          + expr + LN
           + spaces + '^';
     }
     return result;

@@ -10,10 +10,10 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stinc.male.exrpcalculator.Main;
 import stinc.male.exrpcalculator.logic.Word.Type;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static stinc.male.exrpcalculator.Main.LN;
 import static stinc.male.exrpcalculator.logic.Word.Type.CLOSING_BRACKET;
 import static stinc.male.exrpcalculator.logic.Word.Type.COMMA;
 import static stinc.male.exrpcalculator.logic.Word.Type.EMPTY;
@@ -29,7 +29,7 @@ public final class ExpressionParser {
    *
    * @throws CalculationException
    */
-  static final List<Word> parse(@Nullable final String expr, final MathContext mc) throws CalculationException {
+  static final List<Word> parse(@Nullable final String expr, final MathContext mc) throws CalculationException {//TODO return stream
     checkNotNull(mc, "The argument %s must not be null", "mc");
     logger.debug("Parsing '{}'", expr);
     final List<Word> result;
@@ -101,10 +101,10 @@ public final class ExpressionParser {
         }
       }
     }
-    logger.debug("Parsing result for '{}' is{}{}", expr, Main.LINE_SEPARATOR,
+    logger.debug("Parsing result for '{}' is{}[{}]", expr, LN,
         result.stream()
             .map(Word::toString)
-            .collect(Collectors.joining(Main.LINE_SEPARATOR)));
+            .collect(Collectors.joining(LN)));
     return result;
   }
 
@@ -137,7 +137,7 @@ public final class ExpressionParser {
   }
 
   private ExpressionParser() {
-    throw new UnsupportedOperationException("This class is not dedigned to be instantiated");
+    throw new UnsupportedOperationException("This class is not designed to be instantiated");
   }
 
   private static final class WordInfo {
