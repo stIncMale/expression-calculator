@@ -22,7 +22,7 @@ java -jar exrpcalculator-0.1.jar [options] "expression"
 ```
 One can also specify expression via the standard input stream:
 ```
-echo "expression" | java -jar ./target/exrpcalculator-0.1.jar
+echo "expression" | java -jar exrpcalculator-0.1.jar
 ```
 
 ## Expression systax
