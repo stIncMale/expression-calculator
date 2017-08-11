@@ -5,7 +5,7 @@ import java.math.MathContext;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +26,7 @@ public final class ExpressionCalculator {
   private final MathContext mc;
   private final Deque<Word> stack;
   private final Deque<LetOperatorScope> letOperatorScopesStack;
-  private final LinkedHashMap<String, BigDecimal> context;
+  private final Map<String, BigDecimal> context;
   final List<Word> reversedOperands;
 
   public ExpressionCalculator(final MathContext mc) {
@@ -34,7 +34,7 @@ public final class ExpressionCalculator {
     this.mc = mc;
     stack = new ArrayDeque<>();
     letOperatorScopesStack = new ArrayDeque<>();
-    context = new LinkedHashMap<>();
+    context = new HashMap<>();
     reversedOperands = new ArrayList<>();
   }
 
@@ -129,7 +129,7 @@ public final class ExpressionCalculator {
       final Word word,
       final Deque<Word> stack,
       final Deque<LetOperatorScope> letOperatorScopesStack,
-      final LinkedHashMap<String, BigDecimal> context,
+      final Map<String, BigDecimal> context,
       final List<Word> reversedOperands,
       final MathContext mc) {
     checkNotNull(word, "The argument %s must not be null", "word");
