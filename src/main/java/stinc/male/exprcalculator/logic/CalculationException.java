@@ -3,7 +3,7 @@ package stinc.male.exprcalculator.logic;
 import javax.annotation.Nullable;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static stinc.male.exprcalculator.Main.LN;
-import static stinc.male.exprcalculator.logic.ExpressionParser.isEmptySymbol;
+import static stinc.male.exprcalculator.logic.ExpressionSpliterator.isEmptySymbol;
 
 public final class CalculationException extends RuntimeException {
   private static final long serialVersionUID = 0;

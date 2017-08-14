@@ -2,6 +2,7 @@ package stinc.male.exprcalculator.logic;
 
 import java.math.MathContext;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import javax.annotation.concurrent.ThreadSafe;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,7 +28,7 @@ final class ParsedExpression {
    * supplied in the {@linkplain #ParsedExpression(String, MathContext) constructor}.
    */
   final Stream<Word> stream() throws CalculationException {
-    return ExpressionParser.parse(expr, mc);
+    return StreamSupport.stream(new ExpressionSpliterator(expr, mc), false);
   }
 
   @Override

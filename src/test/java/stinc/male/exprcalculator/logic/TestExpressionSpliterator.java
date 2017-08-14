@@ -3,24 +3,24 @@ package stinc.male.exprcalculator.logic;
 import java.math.MathContext;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static stinc.male.exprcalculator.logic.ExpressionParser.parse;
 import static stinc.male.exprcalculator.logic.Word.Type.CLOSING_BRACKET;
 import static stinc.male.exprcalculator.logic.Word.Type.LITERAL;
 import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
 
-public final class TestExpressionParser {
+public final class TestExpressionSpliterator {
   private static final MathContext mc = MathContext.DECIMAL32;
 
-  public TestExpressionParser() {
+  public TestExpressionSpliterator() {
   }
 
   @Test
   public final void parse1() {
     final String expr = "let(a, let(b, 10, add(b, b)), let(b, 20, add(a,b)))";
-    final List<Word> words = parse(expr, mc).collect(Collectors.toList());
+    final List<Word> words = StreamSupport.stream(new ExpressionSpliterator(expr, mc), false).collect(Collectors.toList());
     assertFalse(words.stream()
         .filter(w -> w.getType().isIgnorable())
         .findAny()
@@ -33,7 +33,7 @@ public final class TestExpressionParser {
   @Test
   public final void parse2() {
     final String expr = "let ( \n _a_d   , -5.67, let(bw, mult \t (_a_d, 10  ), add(bw, _a_d)))";
-    final List<Word> words = parse(expr, mc).collect(Collectors.toList());
+    final List<Word> words = StreamSupport.stream(new ExpressionSpliterator(expr, mc), false).collect(Collectors.toList());
     assertFalse(words.stream()
         .filter(w -> w.getType().isIgnorable())
         .findAny()
@@ -46,21 +46,25 @@ public final class TestExpressionParser {
 
   @Test(expected = CalculationException.class)
   public final void parse3() {
-    parse("le-t(a, 10, add(a,1))", mc);
+    new ExpressionSpliterator("le-t(a, 10, add(a,1))", mc)
+        .forEachRemaining(w -> {});
   }
 
   @Test(expected = CalculationException.class)
   public final void parseBracketsBalance1() {
-    parse("(()", mc);
+    new ExpressionSpliterator("(()", mc)
+        .forEachRemaining(w -> {});
   }
 
   @Test()
   public final void parseBracketsBalance2() {
-    parse("(()(()))", mc);
+    new ExpressionSpliterator("(()(()))", mc)
+        .forEachRemaining(w -> {});
   }
 
   @Test(expected = CalculationException.class)
   public final void parseBracketsBalance3() {
-    parse(")(", mc);
+    new ExpressionSpliterator(")(", mc)
+        .forEachRemaining(w -> {});
   }
 }
