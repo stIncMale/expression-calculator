@@ -64,7 +64,7 @@ public final class ExpressionCalculator {
   private final BigDecimal calculate(final ParsedExpression parsedExpr) throws CalculationException {
     @Nullable
     final Mutable<Word> lastSeenOperator = new MutableObject<>(null);
-    parsedExpr.getWords().forEach(word -> {
+    parsedExpr.stream().forEach(word -> {
       try {
         switch (word.getLogicalType()) {
           case OPERATOR_LET: {
