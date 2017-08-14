@@ -10,7 +10,7 @@ final class ParsedExpression {
   private final String expr;
   private final MathContext mc;
 
-  ParsedExpression(final String expr, final MathContext mc) throws CalculationException {
+  ParsedExpression(final String expr, final MathContext mc) {
     checkNotNull(expr, "The argument %s must not be null", "expr");
     checkNotNull(mc, "The argument %s must not be null", "mc");
     this.expr = expr;
@@ -26,7 +26,7 @@ final class ParsedExpression {
    * A new {@link Stream}{@code <}{@link Word}{@code >} which represents the string expression
    * supplied in the {@linkplain #ParsedExpression(String, MathContext) constructor}.
    */
-  final Stream<Word> stream() {
+  final Stream<Word> stream() throws CalculationException {
     return ExpressionParser.parse(expr, mc);
   }
 
