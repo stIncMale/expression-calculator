@@ -48,7 +48,8 @@ public final class TestArgs {
 
   @Test
   public final void mathContext2() {
-    assertEquals(10,
+    assertEquals(
+        10,
         new Args(new String[] {"-p", "10"}).getMathContext()
             .getPrecision());
   }

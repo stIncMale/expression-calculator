@@ -14,7 +14,8 @@ public final class TestInputAndArgs {
   public final void constructor1() {
     final InputAndArgs o = new InputAndArgs(new String[] {"-v", "OFF", "input"}, null);
     assertEquals("input", o.getInput());
-    assertEquals(Level.OFF,
+    assertEquals(
+        Level.OFF,
         o.getArguments()
             .getLoggingLevel());
   }
@@ -23,7 +24,8 @@ public final class TestInputAndArgs {
   public final void constructor2() {
     final InputAndArgs o = new InputAndArgs(new String[] {"-v"}, null);
     assertEquals("-v", o.getInput());
-    assertEquals(Level.ERROR,
+    assertEquals(
+        Level.ERROR,
         o.getArguments()
             .getLoggingLevel());
   }

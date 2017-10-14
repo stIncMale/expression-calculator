@@ -46,6 +46,8 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
           wordInfo = new WordInfo(idx, symbol, mc);
           bracketsValidator = new BracketsValidator();
         } else {
+          assert bracketsValidator != null;
+          assert wordInfo != null;
           switch (wordInfo.type) {
             case EMPTY:
             case COMMA: {

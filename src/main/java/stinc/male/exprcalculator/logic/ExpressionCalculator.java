@@ -285,12 +285,10 @@ public final class ExpressionCalculator {
       operandVar = null;
     }
 
-    private boolean register(final Word word, final Map<String, BigDecimal> context) throws CalculationException {
-      final boolean contextUpdated;
+    private void register(final Word word, final Map<String, BigDecimal> context) throws CalculationException {
       if (operandVar == null) {//expecting OPERAND_VAR
         if (word.getLogicalType() == OPERAND_VAR) {
           operandVar = word;
-          contextUpdated = false;
         } else {
           throw new CalculationException(word);
         }
@@ -303,16 +301,13 @@ public final class ExpressionCalculator {
             operand = word;
             final BigDecimal varValue = word.getValue();
             context.put(varName, varValue);
-            contextUpdated = true;
             logger.debug("New context ({} was added) {}", varName, context);
           }
         } else {//expecting OPERAND but getting something invalid
           throw new CalculationException(word);
         }
       } else {//expecting nothing
-        contextUpdated = false;
       }
-      return contextUpdated;
     }
   }
 }

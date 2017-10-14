@@ -48,30 +48,26 @@ public final class TestExpressionCalculator {
   @Test
   public final void calculate2() {
     final ExpressionCalculator calc = new ExpressionCalculator(mc);
-
+    assertEquals(1,
+        Math.round(calc.calculate("mult(3, div(1, 3))")
+            .doubleValue()));
   }
 
   @Test
   public final void calculate3() {
     final ExpressionCalculator calc = new ExpressionCalculator(mc);
-    assertThrows(CalculationException.class,
-        () -> calc.calculate("let(a, 1, add(let(a, 2, div(a, 1)), 1))")
-            .intValueExact());
+    assertThrows(CalculationException.class, () -> calc.calculate("let(a, 1, add(let(a, 2, div(a, 1)), 1))"));
   }
 
   @Test
   public final void calculate4() {
     final ExpressionCalculator calc = new ExpressionCalculator(mc);
-    assertThrows(CalculationException.class,
-        () -> calc.calculate("let(add, 1, div(a, 1))")
-            .intValueExact());
+    assertThrows(CalculationException.class, () -> calc.calculate("let(add, 1, div(a, 1))"));
   }
 
   @Test
   public final void calculate5() {
     final ExpressionCalculator calc = new ExpressionCalculator(mc);
-    assertThrows(CalculationException.class,
-        () -> calc.calculate("(123)")
-            .intValueExact());
+    assertThrows(CalculationException.class, () -> calc.calculate("(123)"));
   }
 }

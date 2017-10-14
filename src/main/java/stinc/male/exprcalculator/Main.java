@@ -53,7 +53,7 @@ public final class Main {
       final MathContext mc = inputAndArgs.getArguments()
           .getMathContext();
       final ExpressionCalculator calculator = new ExpressionCalculator(new MathContext(
-          /**
+          /*
            * By using increased precision and then rounding we can achieve mult(div(1, 3), 3) == 1 instead of 0.999...
            */
           mc.getPrecision() == 0 ? 0 : mc.getPrecision() + 1, mc.getRoundingMode()));

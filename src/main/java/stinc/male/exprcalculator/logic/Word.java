@@ -126,7 +126,12 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
   }
 
   enum Type {
-    EMPTY(true), LITERAL(false), NUMERIC(false), OPENING_BRACKET(true), CLOSING_BRACKET(false), COMMA(true);
+    EMPTY(true),
+    LITERAL(false),
+    NUMERIC(false),
+    OPENING_BRACKET(true),
+    CLOSING_BRACKET(false),
+    COMMA(true);
 
     private final boolean ignorable;
 
@@ -140,9 +145,14 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
   }
 
   enum LogicalType {
-    OPERATOR_LET(true, null), OPERATOR_ADD(true, (v1, v2, mc) -> v1.add(v2, mc)), OPERATOR_SUB(true,
-        (v1, v2, mc) -> v1.subtract(v2, mc)), OPERATOR_MULT(true, (v1, v2, mc) -> v1.multiply(v2, mc)), OPERATOR_DIV(true,
-        (v1, v2, mc) -> v1.divide(v2, mc)), OPERAND(false, null), OPERAND_VAR(false, null), CALCULATION(false, null);
+    OPERATOR_LET(true, null),
+    OPERATOR_ADD(true, BigDecimal::add),
+    OPERATOR_SUB(true, BigDecimal::subtract),
+    OPERATOR_MULT(true, BigDecimal::multiply),
+    OPERATOR_DIV(true, BigDecimal::divide),
+    OPERAND(false, null),
+    OPERAND_VAR(false, null),
+    CALCULATION(false, null);
 
     private final boolean operator;
     @Nullable private final Operation operation;
@@ -166,13 +176,13 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
       checkNotNull(v2, "The argument %s must not be null", "v2");
       checkNotNull(mc, "The argument %s must not be null", "mc");
       if (!isCalculationSupported()) {
-        throw new Error(String.format("%s does not support calculation"));
+        throw new Error(String.format("%s does not support calculation", this));
       }
+      assert operation != null;
       return operation.apply(v1, v2, mc);
     }
 
-    private static final Map<String, LogicalType> operationsIndex = ImmutableMap.of(
-        "let",
+    private static final Map<String, LogicalType> operationsIndex = ImmutableMap.of("let",
         OPERATOR_LET,
         "add",
         OPERATOR_ADD,

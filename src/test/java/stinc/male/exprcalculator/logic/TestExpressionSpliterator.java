@@ -24,10 +24,8 @@ public final class TestExpressionSpliterator {
     final List<Word> words = StreamSupport.stream(new ExpressionSpliterator(expr, mc), false)
         .collect(Collectors.toList());
     assertFalse(words.stream()
-        .filter(w -> w.getType()
-            .isIgnorable())
-        .findAny()
-        .isPresent());//assert there are no ignorable words
+        .anyMatch(w -> w.getType()
+            .isIgnorable()));//assert there are no ignorable words
     assertEquals(new Word("let", LITERAL, 0, mc), words.get(0));
     assertEquals(new Word(")", CLOSING_BRACKET, expr.length() - 1, mc), words.get(words.size() - 1));
     assertEquals(new Word("10", NUMERIC, 14, mc), words.get(4));
@@ -39,10 +37,8 @@ public final class TestExpressionSpliterator {
     final List<Word> words = StreamSupport.stream(new ExpressionSpliterator(expr, mc), false)
         .collect(Collectors.toList());
     assertFalse(words.stream()
-        .filter(w -> w.getType()
-            .isIgnorable())
-        .findAny()
-        .isPresent());//assert there are no ignorable words
+        .anyMatch(w -> w.getType()
+            .isIgnorable()));//assert there are no ignorable words
     assertEquals(new Word("let", LITERAL, 0, mc), words.get(0));
     assertEquals(new Word(")", CLOSING_BRACKET, expr.length() - 1, mc), words.get(words.size() - 1));
     assertEquals(new Word("-5.67", NUMERIC, 17, mc), words.get(2));

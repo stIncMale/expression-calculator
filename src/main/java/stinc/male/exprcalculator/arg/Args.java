@@ -30,7 +30,7 @@ public final class Args {
       converter = MathContextConverter.class) private MathContext mc = MathContext.DECIMAL32;
 
   public Args(@Nullable final String[] args) throws ParameterException {
-    this(args, 0, Math.max(0, args.length - 1));
+    this(args, 0, args == null ? 0 : Math.max(0, args.length - 1));
   }
 
   public Args(@Nullable final String[] args, int fromIdxInclusive, int toIdxInclusive) throws ParameterException {
@@ -79,11 +79,10 @@ public final class Args {
   /**
    * Prints usage to {@link System#out}.
    */
-  public static final RuntimeException printUsage() {
+  public static final void printUsage() {
     newJCommanderBuilder().addObject(new Args())
         .build()
         .usage();
-    return new RuntimeException();
   }
 
   private static final JCommander.Builder newJCommanderBuilder() {
