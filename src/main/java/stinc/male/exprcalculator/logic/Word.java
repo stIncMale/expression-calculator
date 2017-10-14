@@ -7,7 +7,7 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+import javax.annotation.concurrent.Immutable;
 import org.apache.commons.lang3.StringUtils;
 import stinc.male.exprcalculator.Main;
 import static com.google.common.base.Preconditions.checkArgument;
