@@ -17,18 +17,17 @@ import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND;
 import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND_VAR;
 import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
 
-@Immutable
-final class Word {
+@Immutable final class Word {
   private final String word;
   private final Type type;
   private final int position;
   private final LogicalType ltype;
-  @Nullable
-  private final BigDecimal value;
+  @Nullable private final BigDecimal value;
 
   Word(final Word operator, final BigDecimal result) {
     checkNotNull(operator, "The argument %s must not be null", "operator");
-    checkArgument(operator.getLogicalType().isOperator(), "The argument %s=%s is invalid", "operator", operator);
+    checkArgument(operator.getLogicalType()
+        .isOperator(), "The argument %s=%s is invalid", "operator", operator);
     checkNotNull(result, "The argument %s must not be null", "result");
     word = operator.getWord();
     type = NUMERIC;
@@ -37,10 +36,7 @@ final class Word {
     value = result;
   }
 
-  Word(final String word,
-      final Type type,
-      final int position,
-      final MathContext mc) {
+  Word(final String word, final Type type, final int position, final MathContext mc) {
     checkArgument(StringUtils.isNotBlank(word), "The argument %s=%s must not be blank", "word", word);
     checkNotNull(type, "The argument %s must not be null", "type");
     checkArgument(!type.isIgnorable(), "The argument %s=%s is invalid", "type", type);
@@ -79,12 +75,8 @@ final class Word {
 
   @Override
   public final String toString() {
-    return getClass().getSimpleName()
-        + "{word='" + word + "'"
-        + ", type=" + type
-        + ", position=" + position
-        + ", ltype=" + ltype
-        + ", value=" + value + '}';
+    return getClass().getSimpleName() + "{word='" + word + "'" + ", type=" + type + ", position=" + position + ", ltype=" + ltype + ", value=" +
+        value + '}';
   }
 
   @Override
@@ -94,9 +86,7 @@ final class Word {
       result = true;
     } else if (o instanceof Word) {
       final Word obj = (Word)o;
-      result = word.equals(obj.word)
-          && type == obj.type
-          && position == obj.position;
+      result = word.equals(obj.word) && type == obj.type && position == obj.position;
     } else {
       result = false;
     }
@@ -112,8 +102,7 @@ final class Word {
     final Map.Entry<LogicalType, BigDecimal> result;
     switch (type) {
       case LITERAL: {
-        @Nullable
-        final LogicalType ltype = LogicalType.operationsIndex.get(word.toLowerCase(Main.locale));
+        @Nullable final LogicalType ltype = LogicalType.operationsIndex.get(word.toLowerCase(Main.locale));
         if (ltype == null) {
           result = new SimpleImmutableEntry<>(OPERAND_VAR, null);
         } else {
@@ -137,12 +126,7 @@ final class Word {
   }
 
   enum Type {
-    EMPTY(true),
-    LITERAL(false),
-    NUMERIC(false),
-    OPENING_BRACKET(true),
-    CLOSING_BRACKET(false),
-    COMMA(true);
+    EMPTY(true), LITERAL(false), NUMERIC(false), OPENING_BRACKET(true), CLOSING_BRACKET(false), COMMA(true);
 
     private final boolean ignorable;
 
@@ -156,22 +140,15 @@ final class Word {
   }
 
   enum LogicalType {
-    OPERATOR_LET(true, null),
-    OPERATOR_ADD(true, (v1, v2, mc) -> v1.add(v2, mc)),
-    OPERATOR_SUB(true, (v1, v2, mc) -> v1.subtract(v2, mc)),
-    OPERATOR_MULT(true, (v1, v2, mc) -> v1.multiply(v2, mc)),
-    OPERATOR_DIV(true, (v1, v2, mc) -> v1.divide(v2, mc)),
-    OPERAND(false, null),
-    OPERAND_VAR(false, null),
-    CALCULATION(false, null);
+    OPERATOR_LET(true, null), OPERATOR_ADD(true, (v1, v2, mc) -> v1.add(v2, mc)), OPERATOR_SUB(true,
+        (v1, v2, mc) -> v1.subtract(v2, mc)), OPERATOR_MULT(true, (v1, v2, mc) -> v1.multiply(v2, mc)), OPERATOR_DIV(true,
+        (v1, v2, mc) -> v1.divide(v2, mc)), OPERAND(false, null), OPERAND_VAR(false, null), CALCULATION(false, null);
 
     private final boolean operator;
-    @Nullable
-    private final Operation operation;
+    @Nullable private final Operation operation;
 
     LogicalType(
-        final boolean operator,
-        @Nullable Operation operation) {
+        final boolean operator, @Nullable Operation operation) {
       this.operator = operator;
       this.operation = operation;
     }
@@ -195,14 +172,18 @@ final class Word {
     }
 
     private static final Map<String, LogicalType> operationsIndex = ImmutableMap.of(
-        "let", OPERATOR_LET,
-        "add", OPERATOR_ADD,
-        "sub", OPERATOR_SUB,
-        "mult", OPERATOR_MULT,
-        "div", OPERATOR_DIV);
+        "let",
+        OPERATOR_LET,
+        "add",
+        OPERATOR_ADD,
+        "sub",
+        OPERATOR_SUB,
+        "mult",
+        OPERATOR_MULT,
+        "div",
+        OPERATOR_DIV);
 
-    @FunctionalInterface
-    private interface Operation {
+    @FunctionalInterface private interface Operation {
       BigDecimal apply(BigDecimal v1, BigDecimal v2, MathContext mc);
     }
   }

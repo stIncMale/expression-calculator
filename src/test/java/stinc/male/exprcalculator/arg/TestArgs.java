@@ -1,10 +1,11 @@
 package stinc.male.exprcalculator.arg;
 
+import org.junit.jupiter.api.Test;
 import com.beust.jcommander.ParameterException;
 import java.math.MathContext;
 import org.apache.logging.log4j.Level;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class TestArgs {
   public TestArgs() {
@@ -17,27 +18,27 @@ public final class TestArgs {
 
   @Test
   public final void loggingLevel2() {
-    assertEquals(Level.OFF, new Args(new String[]{"-v", "OFF"}).getLoggingLevel());
+    assertEquals(Level.OFF, new Args(new String[] {"-v", "OFF"}).getLoggingLevel());
   }
 
   @Test
   public final void loggingLevel3() {
-    assertEquals(Level.WARN, new Args(new String[]{"-log", "warn"}).getLoggingLevel());
+    assertEquals(Level.WARN, new Args(new String[] {"-log", "warn"}).getLoggingLevel());
   }
 
-  @Test(expected = ParameterException.class)
+  @Test
   public final void loggingLevel4() {
-    new Args(new String[]{"-v"});
+    assertThrows(ParameterException.class, () -> new Args(new String[] {"-v"}));
   }
 
-  @Test(expected = ParameterException.class)
+  @Test
   public final void loggingLevel5() {
-    new Args(new String[]{"-log", ""});
+    assertThrows(ParameterException.class, () -> new Args(new String[] {"-log", ""}));
   }
 
-  @Test(expected = ParameterException.class)
+  @Test
   public final void loggingLevel6() {
-    new Args(new String[]{"-v", "fck"});
+    assertThrows(ParameterException.class, () -> new Args(new String[] {"-v", "fck"}));
   }
 
   @Test
@@ -47,16 +48,18 @@ public final class TestArgs {
 
   @Test
   public final void mathContext2() {
-    assertEquals(10, new Args(new String[]{"-p", "10"}).getMathContext().getPrecision());
+    assertEquals(10,
+        new Args(new String[] {"-p", "10"}).getMathContext()
+            .getPrecision());
   }
 
   @Test
   public final void constructor1() {
-    assertEquals(Level.OFF, new Args(new String[]{"-v", "OFF", "input"}, 0, 1).getLoggingLevel());
+    assertEquals(Level.OFF, new Args(new String[] {"-v", "OFF", "input"}, 0, 1).getLoggingLevel());
   }
 
-  @Test(expected = ParameterException.class)
+  @Test
   public final void constructor2() {
-    new Args(new String[]{"-v", "OFF", "input"}, 0, 2);
+    assertThrows(ParameterException.class, () -> new Args(new String[] {"-v", "OFF", "input"}, 0, 2));
   }
 }

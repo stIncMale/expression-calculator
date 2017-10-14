@@ -20,24 +20,28 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Args {
   private static final String NAME_OF_EXECUTABLE = "java -jar exprcalculator.jar";
 
-  @Parameter(names = {"-v", "-log"}, description = "Logging level. Possible values: OFF, ERROR, WARN, INFO, DEBUG", converter = LoggingLevelConverter.class)
-  private Level loggingLevel = Level.ERROR;
+  @Parameter(names = {"-v", "-log"},
+      description = "Logging level. Possible values: OFF, ERROR, WARN, INFO, DEBUG",
+      converter = LoggingLevelConverter.class) private Level loggingLevel = Level.ERROR;
 
   @Parameter(names = {"-p", "-precision"},
-      description = "Precision: the number of digits to be used. Must not be negative. " +
-          "Use 0 for unlimited precision, but this will result in failures to calculate expressions which lead to irrational or repeating decimals (e.g. 'div(1, 3)')",
-      converter = MathContextConverter.class)
-  private MathContext mc = MathContext.DECIMAL32;
+      description = "Precision: the number of digits to be used. Must not be negative. Use 0 for unlimited precision, " +
+          "but this will result in failures to calculate expressions which lead to irrational or repeating decimals (e.g. 'div(1, 3)')",
+      converter = MathContextConverter.class) private MathContext mc = MathContext.DECIMAL32;
 
   public Args(@Nullable final String[] args) throws ParameterException {
     this(args, 0, Math.max(0, args.length - 1));
   }
 
   public Args(@Nullable final String[] args, int fromIdxInclusive, int toIdxInclusive) throws ParameterException {
-    checkArgument(fromIdxInclusive >= 0, "The argument %s=%s must not be negative",
-        "fromIdxInclusive", fromIdxInclusive);
-    checkArgument(toIdxInclusive >= fromIdxInclusive, "The argument %s=%s must not be less than %s=%s",
-        "toIdxInclusive", toIdxInclusive, "fromIdxInclusive", fromIdxInclusive);
+    checkArgument(fromIdxInclusive >= 0, "The argument %s=%s must not be negative", "fromIdxInclusive", fromIdxInclusive);
+    checkArgument(
+        toIdxInclusive >= fromIdxInclusive,
+        "The argument %s=%s must not be less than %s=%s",
+        "toIdxInclusive",
+        toIdxInclusive,
+        "fromIdxInclusive",
+        fromIdxInclusive);
     @Nullable final String[] actualArgs;
     if (args == null || args.length == 0) {
       actualArgs = null;
@@ -45,10 +49,7 @@ public final class Args {
       actualArgs = args;
     } else {
       actualArgs = new String[toIdxInclusive - fromIdxInclusive + 1];
-      System.arraycopy(
-          args, fromIdxInclusive,
-          actualArgs, 0,
-          actualArgs.length);
+      System.arraycopy(args, fromIdxInclusive, actualArgs, 0, actualArgs.length);
     }
     if (actualArgs == null) {
       //use the default values
@@ -72,8 +73,7 @@ public final class Args {
 
   @Override
   public final String toString() {
-    return "{loggingLevel=" + loggingLevel
-        + ", mc=" + mc + '}';
+    return "{loggingLevel=" + loggingLevel + ", mc=" + mc + '}';
   }
 
   /**
@@ -93,8 +93,7 @@ public final class Args {
         .programName(NAME_OF_EXECUTABLE);
   }
 
-  @ThreadSafe
-  private static final class LoggingLevelConverter implements IStringConverter<Level> {
+  @ThreadSafe private static final class LoggingLevelConverter implements IStringConverter<Level> {
     private static final Set<Level> validValues = ImmutableSet.of(Level.OFF, Level.ERROR, Level.WARN, Level.INFO, Level.DEBUG);
 
     private LoggingLevelConverter() {
@@ -115,8 +114,7 @@ public final class Args {
     }
   }
 
-  @ThreadSafe
-  private static final class MathContextConverter implements IStringConverter<MathContext> {
+  @ThreadSafe private static final class MathContextConverter implements IStringConverter<MathContext> {
     private MathContextConverter() {
     }
 

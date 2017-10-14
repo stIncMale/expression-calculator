@@ -9,18 +9,15 @@ public final class CalculationException extends RuntimeException {
   private static final long serialVersionUID = 0;
 
   private final int problemIdx;
-  @Nullable
-  private final String word;
-  @Nullable
-  private String expr;
+  @Nullable private final String word;
+  @Nullable private String expr;
 
   CalculationException(@Nullable final String expr) {
     this(-1, null, expr, null, null);
   }
 
   CalculationException(
-      @Nullable final String expr,
-      @Nullable final Throwable cause) {
+      @Nullable final String expr, @Nullable final Throwable cause) {
     this(-1, null, expr, null, cause);
   }
 
@@ -53,10 +50,7 @@ public final class CalculationException extends RuntimeException {
       @Nullable final String expr,
       @Nullable final String message,
       @Nullable final Throwable cause) {
-    super((message == null && expr != null)
-            ? description(problemIdx, word, expr)
-            : message,
-        cause);
+    super((message == null && expr != null) ? description(problemIdx, word, expr) : message, cause);
     this.problemIdx = problemIdx;
     this.word = word;
     this.expr = expr;
@@ -99,9 +93,8 @@ public final class CalculationException extends RuntimeException {
         }
         spaces = new String(spaceChars);
       }
-      result = String.format("Problem with '%s' at index %s:", word == null ? expr.charAt(problemIdx) : word, problemIdx) + LN
-          + expr + LN
-          + spaces + '^';
+      result =
+          String.format("Problem with '%s' at index %s:", word == null ? expr.charAt(problemIdx) : word, problemIdx) + LN + expr + LN + spaces + '^';
     }
     return result;
   }

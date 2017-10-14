@@ -18,10 +18,8 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
   private final String expr;
   private final MathContext mc;
   int idx;
-  @Nullable
-  WordInfo wordInfo;
-  @Nullable
-  private BracketsValidator bracketsValidator;
+  @Nullable WordInfo wordInfo;
+  @Nullable private BracketsValidator bracketsValidator;
 
   ExpressionSpliterator(final String expr, final MathContext mc) {
     super(Long.MAX_VALUE, DISTINCT | IMMUTABLE | NONNULL | ORDERED);
@@ -38,15 +36,12 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
   public final boolean tryAdvance(final Consumer<? super Word> action) throws CalculationException {
     checkNotNull(action, "The argument %s must not be null", "action");
     final boolean result;
-    @Nullable
-    Word word = null;
+    @Nullable Word word = null;
     for (; word == null && idx <= expr.length(); idx++) {
       final boolean endOfExpression = idx == expr.length();
       final int problemIdx = endOfExpression ? expr.length() - 1 : idx;
       try {
-        final char symbol = endOfExpression
-            ? ' '
-            : expr.charAt(idx);
+        final char symbol = endOfExpression ? ' ' : expr.charAt(idx);
         if (idx == 0) {
           wordInfo = new WordInfo(idx, symbol, mc);
           bracketsValidator = new BracketsValidator();

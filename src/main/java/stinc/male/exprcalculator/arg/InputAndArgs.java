@@ -17,8 +17,7 @@ public final class InputAndArgs {
   private final Args arguments;
 
   /**
-   * @param in
-   * {@link InputAndArgs} tries to read the {@linkplain #getInput() input} from {@code in} if {@code in} is provided.
+   * @param in {@link InputAndArgs} tries to read the {@linkplain #getInput() input} from {@code in} if {@code in} is provided.
    */
   public InputAndArgs(@Nullable final String[] args, @Nullable InputStream in) throws ParameterException {
     try {
@@ -29,9 +28,7 @@ public final class InputAndArgs {
         throw new ParameterException(MESSAGE_NO_INPUT);
       } else {//input is provided via command line arguments
         input = validateInput(args[args.length - 1]);
-        arguments = args.length > 1
-            ? new Args(args, 0, args.length - 2)
-            : new Args();//use default arguments
+        arguments = args.length > 1 ? new Args(args, 0, args.length - 2) : new Args();//use default arguments
       }
     } catch (final IOException e) {
       throw new RuntimeException(e);
@@ -48,8 +45,7 @@ public final class InputAndArgs {
 
   @Override
   public final String toString() {
-    return "{input=" + input
-        + ", arguments=" + arguments + '}';
+    return "{input=" + input + ", arguments=" + arguments + '}';
   }
 
   private static final String validateInput(final String input) throws ParameterException {

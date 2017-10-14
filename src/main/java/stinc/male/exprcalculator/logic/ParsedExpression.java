@@ -6,8 +6,7 @@ import java.util.stream.StreamSupport;
 import javax.annotation.concurrent.ThreadSafe;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@ThreadSafe
-final class ParsedExpression {
+@ThreadSafe final class ParsedExpression {
   private final String expr;
   private final MathContext mc;
 
@@ -23,8 +22,7 @@ final class ParsedExpression {
   }
 
   /**
-   * @return
-   * A new {@link Stream}{@code <}{@link Word}{@code >} which represents the string expression
+   * @return A new {@link Stream}{@code <}{@link Word}{@code >} which represents the string expression
    * supplied in the {@linkplain #ParsedExpression(String, MathContext) constructor}.
    */
   final Stream<Word> stream() throws CalculationException {
@@ -33,8 +31,6 @@ final class ParsedExpression {
 
   @Override
   public final String toString() {
-    return getClass().getSimpleName()
-        + "{expr='" + expr + "'"
-        + ", mc=" + mc + '}';
+    return getClass().getSimpleName() + "{expr='" + expr + "'" + ", mc=" + mc + '}';
   }
 }
