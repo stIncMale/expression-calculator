@@ -195,6 +195,7 @@
             <trimStackTrace>false</trimStackTrace>
             <parallel>${exprcalculator.maven-surefire-plugin.parallel}</parallel>
             <threadCount>5</threadCount>
+            <argLine>-enableassertions</argLine>
           </configuration>
           <dependencies>
             <dependency>
@@ -245,10 +246,10 @@
               </group>
             </groups>
             <links>
-              <link>http://docs.oracle.com/javase/9/docs/api</link>
-              <link>http://docs.oracle.com/javaee/7/api</link>
-              <link>http://www.javadoc.io/doc/com.google.code.findbugs/jsr305/3.0.2</link>
-              <link>https://google.github.io/guava/releases/23.0/api/docs</link>
+              <link>http://docs.oracle.com/javase/9/docs/api/</link>
+              <link>http://docs.oracle.com/javaee/7/api/</link>
+              <link>http://stincmale.github.io/jsr-305/javadoc/</link>
+              <link>https://google.github.io/guava/releases/23.0/api/docs/</link>
             </links>
             <validateLinks>true</validateLinks>
             <includeDependencySources>false</includeDependencySources>
@@ -285,7 +286,7 @@
         <exprcalculator.maven-surefire-plugin.parallel>suitesAndClasses</exprcalculator.maven-surefire-plugin.parallel>
       </properties>
       <activation>
-        <activeByDefault/>
+        <activeByDefault>true</activeByDefault>
       </activation>
       <build>
         <plugins>
