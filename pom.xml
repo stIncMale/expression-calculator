@@ -127,7 +127,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apiguardian</groupId>
+      <groupId>org.apiguardian</groupId><!-- required because of JUnit5 -->
       <artifactId>apiguardian-api</artifactId>
       <scope>test</scope>
     </dependency>
