@@ -1,0 +1,8 @@
+sub(2094820, let(a, let(b, let(c, let(e, 5987, add(e, e)), div(1, c)), add(b, b)), let(d, 98734, add(a, d))))
+
+let(d, sub(mult(add(89345983, 139870), div(2837462, 2423)), let(a, let(b, 10, add(b, b)), let(c, 20, add(a, c)))), add(div(d, 132), d))
+
+sub(745, let(a, let(b, let(c, let(e, 543, add(e, e)), div(let(dd, sub(mult(add(89345983, 139870), div(2837462, 2423)), let(aa, let(bb, 10, add(bb, bb)), let(cc, 12347, add(aa, cc)))), add(div(dd, 563), dd)), c)), add(b, b)), let(d, 198734, add(a, d))))
+
+add(2094820, let(aaa, let(bbb, let(ccc, let(eee, sub(24820, let(a, let(b, let(c, let(e, 597, add(e, e)), div(let(dd, sub(mult(add(89345983, 139870), div(2837462, 2423)), let(aa, let(bb, 10, add(bb, bb)), let(cc, 12347, add(aa, cc)))), add(div(dd, 724), dd)), c)), add(b, b)), let(d, 8734, add(a, d)))), add(eee, eee)), div(1, ccc)), add(bbb, bbb)), let(ddd, 9834, add(aaa, ddd))))
+
