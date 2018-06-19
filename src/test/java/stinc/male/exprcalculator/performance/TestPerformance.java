@@ -30,16 +30,11 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import stinc.male.exprcalculator.logic.ExpressionCalculator;
-import static java.lang.Boolean.parseBoolean;
 import static org.openjdk.jmh.runner.options.TimeValue.milliseconds;
 
 @Tag("performance")
 @TestInstance(Lifecycle.PER_CLASS)
 public class TestPerformance {
-  private static final boolean DRY_RUN = parseBoolean(System.getProperty("stinc.male.exprcalculator.dryRun", "false"));
-  private static final boolean JAVA_SERVER = true;
-  private static final boolean JAVA_ASSERTIONS = DRY_RUN;
-
   static {
     Configurator.setAllLevels("", org.apache.logging.log4j.Level.OFF);//disable logging
   }
@@ -51,27 +46,17 @@ public class TestPerformance {
   public void run() throws RunnerException {
     final ChainedOptionsBuilder jmhOptions = new OptionsBuilder()
         .jvmArgs("-Xms1536m", "-Xmx1536m")
-        .jvmArgsAppend(
-            JAVA_SERVER ? "-server" : "-client",
-            JAVA_ASSERTIONS ? "-enableassertions" : "-disableassertions")
+        .jvmArgsAppend("-server", "-disableassertions")
         .shouldDoGC(true)
         .syncIterations(true)
         .shouldFailOnError(true)
         .threads(1)
-        .timeout(milliseconds(5_000));
-    if (DRY_RUN) {
-      jmhOptions.forks(1)
-          .warmupTime(milliseconds(50))
-          .warmupIterations(1)
-          .measurementTime(milliseconds(50))
-          .measurementIterations(1);
-    } else {
-      jmhOptions.forks(3)
-          .warmupTime(milliseconds(200))
-          .warmupIterations(10)
-          .measurementTime(milliseconds(200))
-          .measurementIterations(5);
-    }
+        .timeout(milliseconds(5_000))
+        .forks(3)
+        .warmupTime(milliseconds(200))
+        .warmupIterations(10)
+        .measurementTime(milliseconds(200))
+        .measurementIterations(5);
     new Runner(jmhOptions.include(getClass().getName() + ".*")
         .mode(Mode.AverageTime)
         .timeUnit(TimeUnit.MICROSECONDS)
