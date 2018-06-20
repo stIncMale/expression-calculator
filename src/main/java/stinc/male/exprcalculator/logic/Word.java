@@ -3,7 +3,6 @@ package stinc.male.exprcalculator.logic;
 import com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
@@ -18,6 +17,34 @@ import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND_VAR;
 import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
 
 @Immutable final class Word {
+  static final class LogicalTypeValuePair {
+    private LogicalType ltype;
+    private @Nullable BigDecimal value;
+
+    LogicalTypeValuePair() {
+      ltype = LogicalType.OPERAND_VAR;
+      value = null;
+    }
+
+    private final LogicalTypeValuePair setLogicalType(final LogicalType ltype) {
+      this.ltype = ltype;
+      return this;
+    }
+
+    private final LogicalType getLogicalType() {
+      return ltype;
+    }
+
+    @Nullable
+    private final BigDecimal getValue() {
+      return value;
+    }
+
+    private void setValue(@Nullable final BigDecimal value) {
+      this.value = value;
+    }
+  }
+
   private final String word;
   private final Type type;
   private final int position;
@@ -36,18 +63,19 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
     value = result;
   }
 
-  Word(final String word, final Type type, final int position, final MathContext mc) {
+  Word(final String word, final Type type, final int position, final MathContext mc, final LogicalTypeValuePair ltypeAndValueHolder) {
     checkArgument(StringUtils.isNotBlank(word), "The argument %s=%s must not be blank", "word", word);
     checkNotNull(type, "The argument %s must not be null", "type");
     checkArgument(!type.isIgnorable(), "The argument %s=%s is invalid", "type", type);
     checkArgument(position >= 0, "The argument %s=%s must not be negative", "position", position);
     checkNotNull(mc, "The argument %s must not be null", "mc");
+    checkNotNull(ltypeAndValueHolder, "The argument %s must not be null", "ltypeAndValueHolder");
     this.word = word;
     this.type = type;
     this.position = position;
-    final Map.Entry<LogicalType, BigDecimal> ltypeAndValue = determineLogicalType(word, type, mc);
-    this.ltype = ltypeAndValue.getKey();
-    this.value = ltypeAndValue.getValue();
+    determineLogicalType(word, type, mc, ltypeAndValueHolder);
+    this.ltype = ltypeAndValueHolder.getLogicalType();
+    this.value = ltypeAndValueHolder.getValue();
   }
 
   final String getWord() {
@@ -98,31 +126,34 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
     return Objects.hash(word, type, position);
   }
 
-  private static final Map.Entry<LogicalType, BigDecimal> determineLogicalType(final String word, final Type type, final MathContext mc) {
-    final Map.Entry<LogicalType, BigDecimal> result;
+  private static final void determineLogicalType(
+      final String word, final Type type, final MathContext mc, final LogicalTypeValuePair ltypeAndValueHolder) {
     switch (type) {
       case LITERAL: {
         @Nullable final LogicalType ltype = LogicalType.operationsIndex.get(word.toLowerCase(Main.locale));
         if (ltype == null) {
-          result = new SimpleImmutableEntry<>(OPERAND_VAR, null);
+          ltypeAndValueHolder.setLogicalType(OPERAND_VAR)
+              .setValue(null);
         } else {
-          result = new SimpleImmutableEntry<>(ltype, null);
+          ltypeAndValueHolder.setLogicalType(ltype)
+              .setValue(null);
         }
         break;
       }
       case NUMERIC: {
-        result = new SimpleImmutableEntry<>(OPERAND, new BigDecimal(word, mc));
+        ltypeAndValueHolder.setLogicalType(OPERAND)
+            .setValue(new BigDecimal(word, mc));
         break;
       }
       case CLOSING_BRACKET: {
-        result = new SimpleImmutableEntry<>(CALCULATION, null);
+        ltypeAndValueHolder.setLogicalType(CALCULATION)
+            .setValue(null);
         break;
       }
       default: {
         throw new Error(String.format("%s is not allowed here", type));
       }
     }
-    return result;
   }
 
   enum Type {

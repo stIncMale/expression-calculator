@@ -27,7 +27,7 @@ public final class ExpressionCalculator {
   private final Deque<Word> stack;
   private final Deque<LetOperatorScope> letOperatorScopesStack;
   private final Map<String, BigDecimal> context;
-  final List<Word> reversedOperands;
+  private final List<Word> reversedOperands;
 
   public ExpressionCalculator(final MathContext mc) {
     checkNotNull(mc, "The argument %s must not be null", "mc");

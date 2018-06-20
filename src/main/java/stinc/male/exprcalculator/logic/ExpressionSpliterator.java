@@ -17,9 +17,10 @@ import static stinc.male.exprcalculator.logic.Word.Type.OPENING_BRACKET;
 public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
   private final String expr;
   private final MathContext mc;
-  int idx;
-  @Nullable WordInfo wordInfo;
-  @Nullable private BracketsValidator bracketsValidator;
+  private int idx;
+  private final WordInfo wordInfo;
+  private final BracketsValidator bracketsValidator;
+  private final Word.LogicalTypeValuePair ltypeAndValueHolder;
 
   ExpressionSpliterator(final String expr, final MathContext mc) {
     super(Long.MAX_VALUE, DISTINCT | IMMUTABLE | NONNULL | ORDERED);
@@ -28,8 +29,9 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
     this.expr = expr;
     this.mc = mc;
     idx = 0;
-    wordInfo = null;
-    bracketsValidator = null;
+    wordInfo = new WordInfo();
+    bracketsValidator = new BracketsValidator();
+    ltypeAndValueHolder = new Word.LogicalTypeValuePair();
   }
 
   @Override
@@ -43,8 +45,8 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
       try {
         final char symbol = endOfExpression ? ' ' : expr.charAt(idx);
         if (idx == 0) {
-          wordInfo = new WordInfo(idx, symbol, mc);
-          bracketsValidator = new BracketsValidator();
+          wordInfo.reset(idx, symbol);
+          bracketsValidator.reset();
         } else {
           assert bracketsValidator != null;
           assert wordInfo != null;
@@ -61,14 +63,14 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
             }
             case CLOSING_BRACKET: {
               bracketsValidator.accountClosing();
-              word = wordInfo.buildWordAndStartNew(idx, symbol, expr);
+              word = wordInfo.buildWordAndStartNew(idx, symbol, expr, mc, ltypeAndValueHolder);
               break;
             }
             case LITERAL: {
               if (symbol == '_' || Character.isAlphabetic(symbol) || Character.isDigit(symbol)) {
                 //continue reading the current word
               } else if (isTrailerSymbol(symbol)) {
-                word = wordInfo.buildWordAndStartNew(idx, symbol, expr);
+                word = wordInfo.buildWordAndStartNew(idx, symbol, expr, mc, ltypeAndValueHolder);
               } else {//invalid symbol
                 throw new CalculationException(problemIdx, expr);
               }
@@ -78,7 +80,7 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
               if (symbol == '.' || Character.isDigit(symbol)) {
                 //continue reading the current word
               } else if (isTrailerSymbol(symbol)) {
-                word = wordInfo.buildWordAndStartNew(idx, symbol, expr);
+                word = wordInfo.buildWordAndStartNew(idx, symbol, expr, mc, ltypeAndValueHolder);
               } else {//invalid symbol
                 throw new CalculationException(problemIdx, expr);
               }
@@ -138,16 +140,20 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
   private static final class WordInfo {
     private int startIdx;
     private Word.Type type;
-    private final MathContext mc;
 
-    private WordInfo(final int startIdx, final char startingSymbol, final MathContext mc) {
-      this.startIdx = startIdx;
-      this.type = wordTypeFor(startingSymbol);
-      this.mc = mc;
+    private WordInfo() {
+      this.startIdx = 0;
+      this.type = Type.EMPTY;
     }
 
-    private final Word buildWordAndStartNew(final int startIdx, final char startingSymbol, final String expr) {
-      final Word result = new Word(expr.substring(this.startIdx, startIdx), type, this.startIdx, mc);
+    private final void reset(final int startIdx, final char startingSymbol) {
+      this.startIdx = startIdx;
+      this.type = wordTypeFor(startingSymbol);
+    }
+
+    private final Word buildWordAndStartNew(final int startIdx, final char startingSymbol, final String expr, final MathContext mc,
+        final Word.LogicalTypeValuePair ltypeAndValueHolder) {
+      final Word result = new Word(expr.substring(this.startIdx, startIdx), type, this.startIdx, mc, ltypeAndValueHolder);
       startNew(startIdx, startingSymbol);
       return result;
     }
@@ -165,16 +171,20 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
       count = 0;
     }
 
-    final void accountOpening() {
+    private final void reset() {
+      count = 0;
+    }
+
+    private final void accountOpening() {
       count++;
     }
 
-    final void accountClosing() {
+    private final void accountClosing() {
       count--;
       checkState(count >= 0, "%s must not be negative", "count");
     }
 
-    final void validate() {
+    private final void validate() {
       checkState(count == 0, "%s=%s must be 0", "count", count);
     }
   }

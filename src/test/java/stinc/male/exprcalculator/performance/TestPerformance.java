@@ -67,7 +67,10 @@ public class TestPerformance {
   @Benchmark
   public void calculate(final BenchmarkState state, final Blackhole bh) {
     final List<String> expressions = state.expressions;
-    final int idx = ThreadLocalRandom.current().nextInt(0, state.expressions.size() - 1);
+    final int size = state.expressions.size();
+    final int idx = size == 1
+        ? 0
+        : ThreadLocalRandom.current().nextInt(0, state.expressions.size() - 1);
     bh.consume(state.calculator.calculate(expressions.get(idx)));
   }
 
@@ -92,6 +95,9 @@ public class TestPerformance {
             .collect(Collectors.toList()));
       } catch (final URISyntaxException | IOException e) {
         throw new RuntimeException(e);
+      }
+      if (expressions.isEmpty()) {
+        throw new RuntimeException("There are no expressions to measure against");
       }
       calculator = new ExpressionCalculator(MathContext.DECIMAL32);
     }

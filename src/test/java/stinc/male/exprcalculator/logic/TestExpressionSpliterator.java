@@ -26,9 +26,9 @@ public final class TestExpressionSpliterator {
     assertFalse(words.stream()
         .anyMatch(w -> w.getType()
             .isIgnorable()));//assert there are no ignorable words
-    assertEquals(new Word("let", LITERAL, 0, mc), words.get(0));
-    assertEquals(new Word(")", CLOSING_BRACKET, expr.length() - 1, mc), words.get(words.size() - 1));
-    assertEquals(new Word("10", NUMERIC, 14, mc), words.get(4));
+    assertEquals(new Word("let", LITERAL, 0, mc, new Word.LogicalTypeValuePair()), words.get(0));
+    assertEquals(new Word(")", CLOSING_BRACKET, expr.length() - 1, mc, new Word.LogicalTypeValuePair()), words.get(words.size() - 1));
+    assertEquals(new Word("10", NUMERIC, 14, mc, new Word.LogicalTypeValuePair()), words.get(4));
   }
 
   @Test
@@ -39,10 +39,10 @@ public final class TestExpressionSpliterator {
     assertFalse(words.stream()
         .anyMatch(w -> w.getType()
             .isIgnorable()));//assert there are no ignorable words
-    assertEquals(new Word("let", LITERAL, 0, mc), words.get(0));
-    assertEquals(new Word(")", CLOSING_BRACKET, expr.length() - 1, mc), words.get(words.size() - 1));
-    assertEquals(new Word("-5.67", NUMERIC, 17, mc), words.get(2));
-    assertEquals(new Word("_a_d", LITERAL, 40, mc), words.get(6));
+    assertEquals(new Word("let", LITERAL, 0, mc, new Word.LogicalTypeValuePair()), words.get(0));
+    assertEquals(new Word(")", CLOSING_BRACKET, expr.length() - 1, mc, new Word.LogicalTypeValuePair()), words.get(words.size() - 1));
+    assertEquals(new Word("-5.67", NUMERIC, 17, mc, new Word.LogicalTypeValuePair()), words.get(2));
+    assertEquals(new Word("_a_d", LITERAL, 40, mc, new Word.LogicalTypeValuePair()), words.get(6));
   }
 
   @Test

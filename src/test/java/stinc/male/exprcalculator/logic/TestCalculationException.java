@@ -14,8 +14,8 @@ public final class TestCalculationException {
   public final void description1() {
     final String expected = "Problem with '567' at index 5:" + LN + "0123456789" + LN + "     ^";
     assertEquals(expected,
-        new CalculationException(new stinc.male.exprcalculator.logic.Word("567", Type.LITERAL, 5, MathContext.DECIMAL32),
-            "0123456789").description());
+        new CalculationException(new Word("567", Type.LITERAL, 5, MathContext.DECIMAL32, new Word.LogicalTypeValuePair()), "0123456789")
+            .description());
   }
 
   @Test
