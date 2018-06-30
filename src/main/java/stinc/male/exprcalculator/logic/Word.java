@@ -95,9 +95,7 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
   }
 
   final BigDecimal getValue() {
-    if (value == null) {
-      throw new Error(String.format("%s does not have value", this));
-    }
+    assert value != null : String.format("%s does not have value", this);
     return value;
   }
 
@@ -151,7 +149,7 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
         break;
       }
       default: {
-        throw new Error(String.format("%s is not allowed here", type));
+        throw new AssertionError(String.format("%s is not allowed here", type));
       }
     }
   }
@@ -206,10 +204,8 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
       checkNotNull(v1, "The argument %s must not be null", "v1");
       checkNotNull(v2, "The argument %s must not be null", "v2");
       checkNotNull(mc, "The argument %s must not be null", "mc");
-      if (!isCalculationSupported()) {
-        throw new Error(String.format("%s does not support calculation", this));
-      }
-      assert operation != null;
+      assert isCalculationSupported() : String.format("%s does not support calculation", this);
+      assert operation != null : String.format("%s has operation=null", this);
       return operation.apply(v1, v2, mc);
     }
 

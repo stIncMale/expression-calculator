@@ -62,16 +62,12 @@ public final class CalculationException extends RuntimeException {
 
   final void setExpression(final String expr) {
     checkNotNull(expr, "The argument %s must not be null", "expr");
-    if (this.expr != null) {
-      throw new Error(String.format("%s has already been set", "expr"));
-    }
+    assert this.expr == null : String.format("%s has already been set", "expr");
     this.expr = expr;
   }
 
   public final String description() {
-    if (this.expr == null) {
-      throw new Error(String.format("%s has not been set", "expr"));
-    }
+    assert this.expr != null : String.format("%s has not been set", "expr");
     return description(problemIdx, word, expr);
   }
 

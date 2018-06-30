@@ -98,7 +98,7 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
               break;
             }
             default: {
-              throw new Error(String.format("%s is not considered", wordInfo.type));
+              throw new AssertionError(String.format("%s is not considered", wordInfo.type));
             }
           }
           if (endOfExpression) {

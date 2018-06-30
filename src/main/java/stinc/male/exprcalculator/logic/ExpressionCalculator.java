@@ -103,7 +103,7 @@ public final class ExpressionCalculator {
                 break;
               }
               default: {
-                throw new Error(String.format("%s is not accounted", word.getLogicalType()));
+                throw new AssertionError(String.format("%s is not accounted", word.getLogicalType()));
               }
             }
           } catch (final CalculationException e) {
@@ -243,11 +243,8 @@ public final class ExpressionCalculator {
       }
       final Word operand3 = reversedOperands.get(reversedOperands.size() - 3);
       intermediateResult = operandValue(operand3, context);
-      if (context.remove(operand1.getWord()) == null) {
-        throw new Error(String.format("context=%s does not contain variable %s", context, operand1.getWord()));
-      } else {
-        logger.debug("New context ({} was removed) {}", operand1.getWord(), context);
-      }
+      assert context.remove(operand1.getWord()) != null : String.format("context=%s does not contain variable %s", context, operand1.getWord());
+      logger.debug("New context ({} was removed) {}", operand1.getWord(), context);
       letOperatorScopesStack.pop();
     }
     return new Word(operator, intermediateResult);
@@ -268,7 +265,7 @@ public final class ExpressionCalculator {
         break;
       }
       default: {
-        throw new Error(String.format("%s is not an operand", operand));
+        throw new AssertionError(String.format("%s is not an operand", operand));
       }
     }
     return result;
