@@ -27,7 +27,7 @@ echo "expression" | java -jar exprcalculator-0.1.jar
 
 ## Expression systax
 Syntax is pretty much obvious from the examples below, but some notes still might be helphul:
-* An expression is either `<number>` or `<any operator>(<operand1>, <operand2>, ...)`.
+* An expression is either `<number>`, or `<any operator>(<operand1>, <operand2>, ...)`, or `<declared variable name>`.
 * Birary operators: `add`, `sub`, `mult`, `div`:
 `<operator>(<expression>, <expression>)`.
 * Ternary operator `let` allows declaring variables and assign values for them:

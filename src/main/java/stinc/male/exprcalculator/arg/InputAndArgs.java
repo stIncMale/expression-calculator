@@ -17,6 +17,7 @@ public final class InputAndArgs {
   private final Args arguments;
 
   /**
+   * @param args Whatever was supplied to the {@code main} method.
    * @param in {@link InputAndArgs} tries to read the {@linkplain #getInput() input} from {@code in} if {@code in} is provided.
    */
   public InputAndArgs(@Nullable final String[] args, @Nullable InputStream in) throws ParameterException {

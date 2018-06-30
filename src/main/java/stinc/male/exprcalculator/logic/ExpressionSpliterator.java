@@ -20,6 +20,7 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
   private int idx;
   private final WordInfo wordInfo;
   private final BracketsValidator bracketsValidator;
+  private final CommasValidator commasValidator;
   private final Word.LogicalTypeValuePair ltypeAndValueHolder;
 
   ExpressionSpliterator(final String expr, final MathContext mc) {
@@ -31,6 +32,7 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
     idx = 0;
     wordInfo = new WordInfo();
     bracketsValidator = new BracketsValidator();
+    commasValidator = new CommasValidator();
     ltypeAndValueHolder = new Word.LogicalTypeValuePair();
   }
 
@@ -47,26 +49,34 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
         if (idx == 0) {
           wordInfo.reset(idx, symbol);
           bracketsValidator.reset();
+          commasValidator.reset();
         } else {
           assert bracketsValidator != null;
           assert wordInfo != null;
           switch (wordInfo.type) {
-            case EMPTY:
+            case EMPTY: {
+              wordInfo.startNew(idx, symbol);//ignore the word
+              break;
+            }
             case COMMA: {
+              commasValidator.account();
               wordInfo.startNew(idx, symbol);//ignore the word
               break;
             }
             case OPENING_BRACKET: {
               bracketsValidator.accountOpening();
+              commasValidator.reset();
               wordInfo.startNew(idx, symbol);//ignore the word
               break;
             }
             case CLOSING_BRACKET: {
               bracketsValidator.accountClosing();
+              commasValidator.reset();
               word = wordInfo.buildWordAndStartNew(idx, symbol, expr, mc, ltypeAndValueHolder);
               break;
             }
             case LITERAL: {
+              commasValidator.reset();
               if (symbol == '_' || Character.isAlphabetic(symbol) || Character.isDigit(symbol)) {
                 //continue reading the current word
               } else if (isTrailerSymbol(symbol)) {
@@ -77,6 +87,7 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
               break;
             }
             case NUMERIC: {
+              commasValidator.reset();
               if (symbol == '.' || Character.isDigit(symbol)) {
                 //continue reading the current word
               } else if (isTrailerSymbol(symbol)) {
@@ -186,6 +197,23 @@ public final class ExpressionSpliterator extends AbstractSpliterator<Word> {
 
     private final void validate() {
       checkState(count == 0, "%s=%s must be 0", "count", count);
+    }
+  }
+
+  private static final class CommasValidator {
+    private int count;
+
+    private CommasValidator() {
+      count = 0;
+    }
+
+    private final void reset() {
+      count = 0;
+    }
+
+    private final void account() {
+      checkState(count == 0, "%s must be 0", "count");
+      count++;
     }
   }
 }

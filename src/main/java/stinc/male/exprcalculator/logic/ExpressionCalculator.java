@@ -28,6 +28,7 @@ public final class ExpressionCalculator {
   private final Deque<LetOperatorScope> letOperatorScopesStack;
   private final Map<String, BigDecimal> context;
   private final List<Word> reversedOperands;
+  private final Mutable<Word> lastSeenOperator;
 
   public ExpressionCalculator(final MathContext mc) {
     checkNotNull(mc, "The argument %s must not be null", "mc");
@@ -36,6 +37,7 @@ public final class ExpressionCalculator {
     letOperatorScopesStack = new ArrayDeque<>();
     context = new HashMap<>();
     reversedOperands = new ArrayList<>();
+    lastSeenOperator = new MutableObject<>(null);
   }
 
   public final BigDecimal calculate(final String expr) throws CalculationException {
@@ -56,13 +58,13 @@ public final class ExpressionCalculator {
       letOperatorScopesStack.clear();
       context.clear();
       reversedOperands.clear();
+      lastSeenOperator.setValue(null);
     }
     logger.debug("Calculation result for '{}' is {}", expr, result);
     return result;
   }
 
   private final BigDecimal calculate(final ParsedExpression parsedExpr) throws CalculationException {
-    @Nullable final Mutable<Word> lastSeenOperator = new MutableObject<>(null);
     parsedExpr.stream()
         .forEach(word -> {
           try {
@@ -240,16 +242,13 @@ public final class ExpressionCalculator {
         throw new CalculationException(operand2);
       }
       final Word operand3 = reversedOperands.get(reversedOperands.size() - 3);
-      if (operand3.getLogicalType() != OPERAND) {
-        throw new CalculationException(operand3);
-      }
+      intermediateResult = operandValue(operand3, context);
       if (context.remove(operand1.getWord()) == null) {
         throw new Error(String.format("context=%s does not contain variable %s", context, operand1.getWord()));
       } else {
         logger.debug("New context ({} was removed) {}", operand1.getWord(), context);
       }
       letOperatorScopesStack.pop();
-      intermediateResult = operand3.getValue();
     }
     return new Word(operator, intermediateResult);
   }

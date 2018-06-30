@@ -43,31 +43,33 @@ public final class TestExpressionCalculator {
         calc.calculate("let(a, 1, add(let(b, 2, div(b, 1)), -1))")
             .intValueExact());
     assertEquals(new BigDecimal("-3.14", mc), calc.calculate("-3.14"));
+    assertEquals(3,
+        calc.calculate("add(let(a, 1, a), let(a, 2, a))")
+            .intValueExact());
   }
 
   @Test
   public final void calculate2() {
     final ExpressionCalculator calc = new ExpressionCalculator(mc);
-    assertEquals(1,
-        Math.round(calc.calculate("mult(3, div(1, 3))")
-            .doubleValue()));
+    assertThrows(CalculationException.class, () -> calc.calculate("(123)"));
+    assertThrows(CalculationException.class, () -> calc.calculate("let(a, 1, add(let(a, 2, div(a, 1)), 1))"));
+    assertThrows(CalculationException.class, () -> calc.calculate("let(add, 1, div(a, 1))"));
+    assertThrows(CalculationException.class, () -> calc.calculate("a"));
+    assertThrows(CalculationException.class, () -> calc.calculate("let"));
+    assertThrows(CalculationException.class, () -> calc.calculate("+"));
+    assertThrows(CalculationException.class, () -> calc.calculate("let(a)"));
+    assertThrows(CalculationException.class, () -> calc.calculate("let(a, a)"));
+    assertThrows(CalculationException.class, () -> calc.calculate("let(let(a, 1, 2), 1, 2)"));
+    assertThrows(CalculationException.class, () -> calc.calculate("add(1,,2)"));
+    assertThrows(CalculationException.class, () -> calc.calculate("add(let(a, 1, a), a)"));
+    assertThrows(CalculationException.class, () -> calc.calculate("div(0,0)"));
   }
 
   @Test
   public final void calculate3() {
     final ExpressionCalculator calc = new ExpressionCalculator(mc);
-    assertThrows(CalculationException.class, () -> calc.calculate("let(a, 1, add(let(a, 2, div(a, 1)), 1))"));
-  }
-
-  @Test
-  public final void calculate4() {
-    final ExpressionCalculator calc = new ExpressionCalculator(mc);
-    assertThrows(CalculationException.class, () -> calc.calculate("let(add, 1, div(a, 1))"));
-  }
-
-  @Test
-  public final void calculate5() {
-    final ExpressionCalculator calc = new ExpressionCalculator(mc);
-    assertThrows(CalculationException.class, () -> calc.calculate("(123)"));
+    assertEquals(1,
+        Math.round(calc.calculate("mult(3, div(1, 3))")
+            .doubleValue()));
   }
 }
