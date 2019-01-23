@@ -2,6 +2,7 @@ package stinc.male.exprcalculator.logic;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,6 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public final class TestExpressionCalculator {
   private static final MathContext mc = MathContext.DECIMAL32;
 
+  static {
+    Configurator.setAllLevels("", org.apache.logging.log4j.Level.OFF);//disable logging
+  }
+  
   public TestExpressionCalculator() {
   }
 
@@ -42,10 +47,18 @@ public final class TestExpressionCalculator {
     assertEquals(1,
         calc.calculate("let(a, 1, add(let(b, 2, div(b, 1)), -1))")
             .intValueExact());
-    assertEquals(new BigDecimal("-3.14", mc), calc.calculate("-3.14"));
     assertEquals(3,
         calc.calculate("add(let(a, 1, a), let(a, 2, a))")
             .intValueExact());
+    assertEquals(-1,
+            calc.calculate("let(d, sub(mult(1, 2), div(9, 3)), add(d, 0))")
+                    .intValueExact());
+    assertEquals(-38,
+            calc.calculate("let(d, sub(mult(add(8, 13), 1), let(a, let(b, 10, add(b, b)), let(c, 20, add(a, c)))), add(div(d, 1), d))")
+                    .intValueExact());
+    assertEquals(new BigDecimal("-16.69230", mc),
+            calc.calculate("let(d, sub(mult(add(8, 13), div(28, 24)), let(a, let(b, 10, add(b, b)), let(c, 20, add(a, c)))), add(div(d, 13), d))"));
+    assertEquals(new BigDecimal("-3.14", mc), calc.calculate("-3.14"));
   }
 
   @Test

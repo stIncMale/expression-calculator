@@ -44,7 +44,7 @@ public final class CalculationException extends RuntimeException {
   /**
    * @param problemIdx Negative when it is impossible to specify the exact place that caused the exception.
    */
-  CalculationException(
+  private CalculationException(
       final int problemIdx,
       @Nullable final String word,
       @Nullable final String expr,

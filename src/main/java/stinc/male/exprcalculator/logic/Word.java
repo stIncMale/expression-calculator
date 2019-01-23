@@ -220,7 +220,8 @@ import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
         "div",
         OPERATOR_DIV);
 
-    @FunctionalInterface private interface Operation {
+    @FunctionalInterface
+    private interface Operation {
       BigDecimal apply(BigDecimal v1, BigDecimal v2, MathContext mc);
     }
   }

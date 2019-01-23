@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
-import org.apache.commons.lang3.mutable.Mutable;
-import org.apache.commons.lang3.mutable.MutableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,9 +24,9 @@ public final class ExpressionCalculator {
   private final MathContext mc;
   private final Deque<Word> stack;
   private final Deque<LetOperatorScope> letOperatorScopesStack;
+  private final Deque<Word> operatorStack;
   private final Map<String, BigDecimal> context;
   private final List<Word> reversedOperands;
-  private final Mutable<Word> lastSeenOperator;
 
   public ExpressionCalculator(final MathContext mc) {
     checkNotNull(mc, "The argument %s must not be null", "mc");
@@ -37,7 +35,7 @@ public final class ExpressionCalculator {
     letOperatorScopesStack = new ArrayDeque<>();
     context = new HashMap<>();
     reversedOperands = new ArrayList<>();
-    lastSeenOperator = new MutableObject<>(null);
+    operatorStack = new ArrayDeque<>();
   }
 
   public final BigDecimal calculate(final String expr) throws CalculationException {
@@ -58,7 +56,7 @@ public final class ExpressionCalculator {
       letOperatorScopesStack.clear();
       context.clear();
       reversedOperands.clear();
-      lastSeenOperator.setValue(null);
+      operatorStack.clear();
     }
     logger.debug("Calculation result for '{}' is {}", expr, result);
     return result;
@@ -70,7 +68,7 @@ public final class ExpressionCalculator {
           try {
             switch (word.getLogicalType()) {
               case OPERATOR_LET: {
-                lastSeenOperator.setValue(word);
+                operatorStack.push(word);
                 stack.push(word);
                 letOperatorScopesStack.push(new LetOperatorScope(word));
                 break;
@@ -79,15 +77,15 @@ public final class ExpressionCalculator {
               case OPERATOR_SUB:
               case OPERATOR_MULT:
               case OPERATOR_DIV: {
-                lastSeenOperator.setValue(word);
+                operatorStack.push(word);
                 stack.push(word);
                 break;
               }
               case OPERAND:
               case OPERAND_VAR: {
                 stack.push(word);
-                if (lastSeenOperator.getValue() != null && lastSeenOperator.getValue()
-                    .getLogicalType() == OPERATOR_LET && !letOperatorScopesStack.isEmpty()) {
+                assert letOperatorScopesStack.isEmpty() || !operatorStack.isEmpty();
+                if (!letOperatorScopesStack.isEmpty() && operatorStack.peek().getLogicalType() == OPERATOR_LET) {
                   letOperatorScopesStack.peek()
                       .register(word, context);
                 }
@@ -96,7 +94,9 @@ public final class ExpressionCalculator {
               case CALCULATION: {
                 final Word intermediateResult = calculateIntermediateResult(word, stack, letOperatorScopesStack, context, reversedOperands, mc);
                 stack.push(intermediateResult);
-                if (!letOperatorScopesStack.isEmpty()) {
+                operatorStack.pop();
+                assert letOperatorScopesStack.isEmpty() || !operatorStack.isEmpty();
+                if (!letOperatorScopesStack.isEmpty() && operatorStack.peek().getLogicalType() == OPERATOR_LET) {
                   letOperatorScopesStack.peek()
                       .register(intermediateResult, context);
                 }
@@ -209,8 +209,8 @@ public final class ExpressionCalculator {
     } else if (reversedOperands.size() > 2) {
       throw new CalculationException(reversedOperands.get(reversedOperands.size() - 3));
     } else {//exactly 2 operands
-      final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
       final Word operand2 = reversedOperands.get(reversedOperands.size() - 2);
+      final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
       try {
         intermediateResult = operator.getLogicalType()
             .calculate(operandValue(operand1, context), operandValue(operand2, context), mc);
@@ -233,15 +233,15 @@ public final class ExpressionCalculator {
     } else if (reversedOperands.size() > 3) {
       throw new CalculationException(reversedOperands.get(reversedOperands.size() - 4));
     } else {//exactly 3 operands
-      final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
-      if (operand1.getLogicalType() != OPERAND_VAR) {
-        throw new CalculationException(operand1);
-      }
+      final Word operand3 = reversedOperands.get(reversedOperands.size() - 3);
       final Word operand2 = reversedOperands.get(reversedOperands.size() - 2);
       if (operand2.getLogicalType() != OPERAND) {
         throw new CalculationException(operand2);
       }
-      final Word operand3 = reversedOperands.get(reversedOperands.size() - 3);
+      final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
+      if (operand1.getLogicalType() != OPERAND_VAR) {
+        throw new CalculationException(operand1);
+      }
       intermediateResult = operandValue(operand3, context);
       assert context.remove(operand1.getWord()) != null : String.format("context=%s does not contain variable %s", context, operand1.getWord());
       logger.debug("New context ({} was removed) {}", operand1.getWord(), context);
