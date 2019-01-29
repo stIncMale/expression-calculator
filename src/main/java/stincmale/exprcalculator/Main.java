@@ -1,4 +1,4 @@
-package stinc.male.exprcalculator;
+package stincmale.exprcalculator;
 
 import com.beust.jcommander.ParameterException;
 import java.io.PrintStream;
@@ -12,10 +12,10 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stinc.male.exprcalculator.arg.Args;
-import stinc.male.exprcalculator.arg.InputAndArgs;
-import stinc.male.exprcalculator.logic.CalculationException;
-import stinc.male.exprcalculator.logic.ExpressionCalculator;
+import stincmale.exprcalculator.arg.Args;
+import stincmale.exprcalculator.arg.InputAndArgs;
+import stincmale.exprcalculator.logic.CalculationException;
+import stincmale.exprcalculator.logic.ExpressionCalculator;
 
 public final class Main {
   public static final int EXIT_STATUS_FAILURE = 1;
@@ -25,7 +25,7 @@ public final class Main {
   public static final String LN = "\n";
   public static final Charset charset = StandardCharsets.UTF_8;
   public static final Locale locale = Locale.ROOT;
-  private static final String APPLICATION_ROOT_LOGGER_NAME = "stinc.male.exprcalculator";
+  private static final String APPLICATION_ROOT_LOGGER_NAME = "stincmale.exprcalculator";
   private static final Logger logger;
 
   static {

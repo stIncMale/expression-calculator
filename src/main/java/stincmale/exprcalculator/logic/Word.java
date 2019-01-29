@@ -1,4 +1,4 @@
-package stinc.male.exprcalculator.logic;
+package stincmale.exprcalculator.logic;
 
 import com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
@@ -8,13 +8,13 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.apache.commons.lang3.StringUtils;
-import stinc.male.exprcalculator.Main;
+import stincmale.exprcalculator.Main;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static stinc.male.exprcalculator.logic.Word.LogicalType.CALCULATION;
-import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND;
-import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND_VAR;
-import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
+import static stincmale.exprcalculator.logic.Word.LogicalType.CALCULATION;
+import static stincmale.exprcalculator.logic.Word.LogicalType.OPERAND;
+import static stincmale.exprcalculator.logic.Word.LogicalType.OPERAND_VAR;
+import static stincmale.exprcalculator.logic.Word.Type.NUMERIC;
 
 @Immutable final class Word {
   static final class LogicalTypeValuePair {

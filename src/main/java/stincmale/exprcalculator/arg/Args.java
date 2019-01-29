@@ -1,4 +1,4 @@
-package stinc.male.exprcalculator.arg;
+package stincmale.exprcalculator.arg;
 
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
@@ -11,7 +11,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import org.apache.logging.log4j.Level;
-import stinc.male.exprcalculator.Main;
+import stincmale.exprcalculator.Main;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**

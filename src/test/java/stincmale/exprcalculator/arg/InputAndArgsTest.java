@@ -1,13 +1,16 @@
-package stinc.male.exprcalculator.arg;
+package stincmale.exprcalculator.arg;
 
 import com.beust.jcommander.ParameterException;
 import org.apache.logging.log4j.Level;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class TestInputAndArgs {
-  public TestInputAndArgs() {
+@TestInstance(Lifecycle.PER_METHOD)
+public final class InputAndArgsTest {
+  public InputAndArgsTest() {
   }
 
   @Test

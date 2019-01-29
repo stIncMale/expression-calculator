@@ -1,4 +1,4 @@
-package stinc.male.exprcalculator.logic;
+package stincmale.exprcalculator.logic;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -12,11 +12,9 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stincmale.exprcalculator.Main;
+import stincmale.exprcalculator.logic.Word.LogicalType;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static stinc.male.exprcalculator.Main.LN;
-import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND;
-import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERAND_VAR;
-import static stinc.male.exprcalculator.logic.Word.LogicalType.OPERATOR_LET;
 
 public final class ExpressionCalculator {
   private static final Logger logger = LoggerFactory.getLogger(ExpressionCalculator.class);
@@ -85,7 +83,7 @@ public final class ExpressionCalculator {
               case OPERAND_VAR: {
                 stack.push(word);
                 assert letOperatorScopesStack.isEmpty() || !operatorStack.isEmpty();
-                if (!letOperatorScopesStack.isEmpty() && operatorStack.peek().getLogicalType() == OPERATOR_LET) {
+                if (!letOperatorScopesStack.isEmpty() && operatorStack.peek().getLogicalType() == LogicalType.OPERATOR_LET) {
                   letOperatorScopesStack.peek()
                       .register(word, context);
                 }
@@ -96,7 +94,7 @@ public final class ExpressionCalculator {
                 stack.push(intermediateResult);
                 operatorStack.pop();
                 assert letOperatorScopesStack.isEmpty() || !operatorStack.isEmpty();
-                if (!letOperatorScopesStack.isEmpty() && operatorStack.peek().getLogicalType() == OPERATOR_LET) {
+                if (!letOperatorScopesStack.isEmpty() && operatorStack.peek().getLogicalType() == LogicalType.OPERATOR_LET) {
                   letOperatorScopesStack.peek()
                       .register(intermediateResult, context);
                 }
@@ -119,7 +117,7 @@ public final class ExpressionCalculator {
       throw new CalculationException(stack.peek(), parsedExpr.getExpression());
     } else {//exactly one element in the stack
       final Word lastWord = stack.peek();
-      if (lastWord.getLogicalType() == OPERAND) {
+      if (lastWord.getLogicalType() == LogicalType.OPERAND) {
         result = lastWord.getValue();
       } else {
         throw new CalculationException(lastWord, parsedExpr.getExpression());
@@ -139,16 +137,16 @@ public final class ExpressionCalculator {
       logger.debug(
           "Calculating intermediate result for {}, stack{}[{}],{}letOperatorScopesStack{}[{}]{}context {}",
           calculationWord,
-          LN,
+          Main.LN,
           stack.stream()
               .map(Word::toString)
-              .collect(Collectors.joining(LN)),
-          LN,
-          LN,
+              .collect(Collectors.joining(Main.LN)),
+          Main.LN,
+          Main.LN,
           letOperatorScopesStack.stream()
               .map(scope -> scope.operator.toString())
-              .collect(Collectors.joining(LN)),
-          LN,
+              .collect(Collectors.joining(Main.LN)),
+          Main.LN,
           context);
     }
     reversedOperands.clear();
@@ -158,7 +156,7 @@ public final class ExpressionCalculator {
         wordFromStack != null && !wordFromStack.getLogicalType()
             .isOperator();
         wordFromStack = stack.peek()) {//read top operands and operator
-      if (wordFromStack.getLogicalType() == OPERAND || wordFromStack.getLogicalType() == OPERAND_VAR) {
+      if (wordFromStack.getLogicalType() == LogicalType.OPERAND || wordFromStack.getLogicalType() == LogicalType.OPERAND_VAR) {
         reversedOperands.add(wordFromStack);
         stack.pop();//remove wordFromStack from stack
       } else {
@@ -182,16 +180,16 @@ public final class ExpressionCalculator {
       logger.debug(
           "Intermediate result {}, stack{}[{}],{}letOperatorScopesStack{}[{}]{}context {}",
           result,
-          LN,
+          Main.LN,
           stack.stream()
               .map(Word::toString)
-              .collect(Collectors.joining(LN)),
-          LN,
-          LN,
+              .collect(Collectors.joining(Main.LN)),
+          Main.LN,
+          Main.LN,
           letOperatorScopesStack.stream()
               .map(scope -> scope.operator.toString())
-              .collect(Collectors.joining(LN)),
-          LN,
+              .collect(Collectors.joining(Main.LN)),
+          Main.LN,
           context);
     }
     return result;
@@ -235,11 +233,11 @@ public final class ExpressionCalculator {
     } else {//exactly 3 operands
       final Word operand3 = reversedOperands.get(reversedOperands.size() - 3);
       final Word operand2 = reversedOperands.get(reversedOperands.size() - 2);
-      if (operand2.getLogicalType() != OPERAND) {
+      if (operand2.getLogicalType() != LogicalType.OPERAND) {
         throw new CalculationException(operand2);
       }
       final Word operand1 = reversedOperands.get(reversedOperands.size() - 1);
-      if (operand1.getLogicalType() != OPERAND_VAR) {
+      if (operand1.getLogicalType() != LogicalType.OPERAND_VAR) {
         throw new CalculationException(operand1);
       }
       intermediateResult = operandValue(operand3, context);
@@ -283,13 +281,13 @@ public final class ExpressionCalculator {
 
     private void register(final Word word, final Map<String, BigDecimal> context) throws CalculationException {
       if (operandVar == null) {//expecting OPERAND_VAR
-        if (word.getLogicalType() == OPERAND_VAR) {
+        if (word.getLogicalType() == LogicalType.OPERAND_VAR) {
           operandVar = word;
         } else {
           throw new CalculationException(word);
         }
       } else if (operand == null) {//expecting OPERAND
-        if (word.getLogicalType() == OPERAND) {//expecting OPERAND and getting OPERAND
+        if (word.getLogicalType() == LogicalType.OPERAND) {//expecting OPERAND and getting OPERAND
           final String varName = operandVar.getWord();
           if (context.containsKey(varName)) {//variable with the same name has already been defined
             throw new CalculationException(operandVar);

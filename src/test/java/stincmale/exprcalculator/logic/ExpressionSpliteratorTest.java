@@ -1,21 +1,22 @@
-package stinc.male.exprcalculator.logic;
+package stincmale.exprcalculator.logic;
 
 import java.math.MathContext;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import stincmale.exprcalculator.logic.Word.Type;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static stinc.male.exprcalculator.logic.Word.Type.CLOSING_BRACKET;
-import static stinc.male.exprcalculator.logic.Word.Type.LITERAL;
-import static stinc.male.exprcalculator.logic.Word.Type.NUMERIC;
 
-public final class TestExpressionSpliterator {
+@TestInstance(Lifecycle.PER_METHOD)
+public final class ExpressionSpliteratorTest {
   private static final MathContext mc = MathContext.DECIMAL32;
 
-  public TestExpressionSpliterator() {
+  public ExpressionSpliteratorTest() {
   }
 
   @Test
@@ -26,9 +27,9 @@ public final class TestExpressionSpliterator {
     assertFalse(words.stream()
         .anyMatch(w -> w.getType()
             .isIgnorable()));//assert there are no ignorable words
-    assertEquals(new Word("let", LITERAL, 0, mc, new Word.LogicalTypeValuePair()), words.get(0));
-    assertEquals(new Word(")", CLOSING_BRACKET, expr.length() - 1, mc, new Word.LogicalTypeValuePair()), words.get(words.size() - 1));
-    assertEquals(new Word("10", NUMERIC, 14, mc, new Word.LogicalTypeValuePair()), words.get(4));
+    assertEquals(new Word("let", Type.LITERAL, 0, mc, new Word.LogicalTypeValuePair()), words.get(0));
+    assertEquals(new Word(")", Type.CLOSING_BRACKET, expr.length() - 1, mc, new Word.LogicalTypeValuePair()), words.get(words.size() - 1));
+    assertEquals(new Word("10", Type.NUMERIC, 14, mc, new Word.LogicalTypeValuePair()), words.get(4));
   }
 
   @Test
@@ -39,10 +40,10 @@ public final class TestExpressionSpliterator {
     assertFalse(words.stream()
         .anyMatch(w -> w.getType()
             .isIgnorable()));//assert there are no ignorable words
-    assertEquals(new Word("let", LITERAL, 0, mc, new Word.LogicalTypeValuePair()), words.get(0));
-    assertEquals(new Word(")", CLOSING_BRACKET, expr.length() - 1, mc, new Word.LogicalTypeValuePair()), words.get(words.size() - 1));
-    assertEquals(new Word("-5.67", NUMERIC, 17, mc, new Word.LogicalTypeValuePair()), words.get(2));
-    assertEquals(new Word("_a_d", LITERAL, 40, mc, new Word.LogicalTypeValuePair()), words.get(6));
+    assertEquals(new Word("let", Type.LITERAL, 0, mc, new Word.LogicalTypeValuePair()), words.get(0));
+    assertEquals(new Word(")", Type.CLOSING_BRACKET, expr.length() - 1, mc, new Word.LogicalTypeValuePair()), words.get(words.size() - 1));
+    assertEquals(new Word("-5.67", Type.NUMERIC, 17, mc, new Word.LogicalTypeValuePair()), words.get(2));
+    assertEquals(new Word("_a_d", Type.LITERAL, 40, mc, new Word.LogicalTypeValuePair()), words.get(6));
   }
 
   @Test

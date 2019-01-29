@@ -1,4 +1,4 @@
-package stinc.male.exprcalculator.performance;
+package stincmale.exprcalculator.performance;
 
 import java.io.IOException;
 import java.math.MathContext;
@@ -6,15 +6,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -29,21 +26,19 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-import stinc.male.exprcalculator.logic.ExpressionCalculator;
+import stincmale.exprcalculator.logic.ExpressionCalculator;
 import static org.openjdk.jmh.runner.options.TimeValue.milliseconds;
 
-@Tag("performance")
+/*
+ * Set level="debug" in log4j2.xml to enable logging.
+ */
 @TestInstance(Lifecycle.PER_CLASS)
-public class TestPerformance {
-  static {
-    Configurator.setAllLevels("", org.apache.logging.log4j.Level.OFF);//disable logging
-  }
-
-  public TestPerformance() {
+public class PerformanceTest {
+  public PerformanceTest() {
   }
 
   @Test
-  public void run() throws RunnerException {
+  void run() throws RunnerException {
     final ChainedOptionsBuilder jmhOptions = new OptionsBuilder()
         .jvmArgs("-Xms1536m", "-Xmx1536m")
         .jvmArgsAppend("-server", "-disableassertions")
@@ -57,7 +52,7 @@ public class TestPerformance {
         .warmupIterations(10)
         .measurementTime(milliseconds(200))
         .measurementIterations(5);
-    new Runner(jmhOptions.include(getClass().getName() + ".*")
+    new Runner(jmhOptions.include(PerformanceTest.class.getName() + ".*")
         .mode(Mode.AverageTime)
         .timeUnit(TimeUnit.MICROSECONDS)
         .build())
@@ -85,14 +80,14 @@ public class TestPerformance {
     @Setup(Level.Trial)
     public final void setupTrial() {
       @Nullable
-      final URL expressionsUrl = TestPerformance.class.getClassLoader()
+      final URL expressionsUrl = PerformanceTest.class.getClassLoader()
           .getResource("expressions");
       if (expressionsUrl == null) {
         throw new RuntimeException("Can't locate expressions");
       }
       try (final Stream<String> lines = Files.lines(Paths.get(expressionsUrl.toURI()))) {
-        expressions = Collections.unmodifiableList(lines.filter(line -> !(line.isEmpty() || line.startsWith("//")))
-            .collect(Collectors.toList()));
+        expressions = lines.filter(line -> !(line.isEmpty() || line.startsWith("#")))
+                .collect(Collectors.toUnmodifiableList());
       } catch (final URISyntaxException | IOException e) {
         throw new RuntimeException(e);
       }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <groupId>stinc.male.exprcalculator</groupId>
+  <groupId>stincmale.exprcalculator</groupId>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exprcalculator</artifactId>
   <version>0.1</version>
@@ -20,19 +20,17 @@
     <url>${exprcalculator.organizationUrl}</url>
   </organization>
   <properties>
-    <log4j.version>2.11.0</log4j.version>
-    <junit-jupiter.version>5.2.0</junit-jupiter.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+    <log4j.version>2.11.1</log4j.version>
     <jmh.version>1.21</jmh.version>
-    <exprcalculator.charset>UTF-8</exprcalculator.charset>
-    <project.build.sourceEncoding>${exprcalculator.charset}</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>${exprcalculator.charset}</project.reporting.outputEncoding>
     <exprcalculator.url>https://github.com/stIncMale/expression-calculator</exprcalculator.url>
     <exprcalculator.licenseName>WTFPL</exprcalculator.licenseName>
     <exprcalculator.licenseUrl>http://www.wtfpl.net/</exprcalculator.licenseUrl>
     <exprcalculator.inceptionYear>2017</exprcalculator.inceptionYear>
-    <exprcalculator.organizationName>Valentin Kovalenko</exprcalculator.organizationName>
-    <exprcalculator.organizationUrl>https://sites.google.com/site/aboutmale/
-    </exprcalculator.organizationUrl>
+    <exprcalculator.organizationName>Valiantsin Kavalenka</exprcalculator.organizationName>
+    <exprcalculator.organizationUrl>https://sites.google.com/site/aboutmale/</exprcalculator.organizationUrl>
+    <exprcalculator.mainClass>stincmale.exprcalculator.Main</exprcalculator.mainClass>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -49,12 +47,12 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>25.1-jre</version>
+        <version>27.0.1-jre</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.7</version>
+        <version>3.8.1</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
@@ -78,13 +76,8 @@
       </dependency>
       <dependency>
         <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit-jupiter.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apiguardian</groupId>
-        <artifactId>apiguardian-api</artifactId>
-        <version>1.0.0</version>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.3.2</version>
       </dependency>
       <dependency>
         <groupId>org.openjdk.jmh</groupId>
@@ -134,12 +127,7 @@
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apiguardian</groupId><!-- required because of JUnit5 -->
-      <artifactId>apiguardian-api</artifactId>
+      <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -159,30 +147,29 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.8.0</version>
           <configuration>
-            <source>9</source>
-            <target>9</target>
-            <encoding>${exprcalculator.charset}</encoding>
+            <source>11</source>
+            <target>11</target>
             <debug>true</debug>
             <debuglevel>lines,vars,source</debuglevel>
             <showWarnings>true</showWarnings>
             <showDeprecation>true</showDeprecation>
             <compilerArgs>
               <arg>-Werror</arg>
-              <arg>-Xlint:all,-try,-processing</arg>
+              <arg>-Xlint:all,-processing</arg>
             </compilerArgs>
           </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.1.1</version>
           <configuration>
             <archive>
               <addMavenDescriptor>false</addMavenDescriptor>
               <manifest>
-                <mainClass>stinc.male.exprcalculator.Main</mainClass>
+                <mainClass>${exprcalculator.mainClass}</mainClass>
                 <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
                 <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
                 <addClasspath>false</addClasspath>
@@ -193,13 +180,21 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.2.1</version>
           <executions>
             <execution>
               <phase>package</phase>
               <goals>
                 <goal>shade</goal>
               </goals>
+              <configuration>
+                <minimizeJar>true</minimizeJar>
+                <transformers>
+                  <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                    <mainClass>${exprcalculator.mainClass}</mainClass>
+                  </transformer>
+                </transformers>
+              </configuration>
             </execution>
           </executions>
         </plugin>
@@ -211,89 +206,22 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.21.0</version>
+          <version>2.22.1</version>
           <configuration>
             <trimStackTrace>false</trimStackTrace>
-            <parallel>${exprcalculator.maven-surefire-plugin.parallel}</parallel>
-            <threadCount>5</threadCount>
-            <argLine>-enableassertions</argLine>
-            <properties>
-              <excludeTags>${exprcalculator.maven-surefire-plugin.excludeTags}</excludeTags>
-            </properties>
+            <useUnlimitedThreads>false</useUnlimitedThreads>
+            <enableAssertions>true</enableAssertions>
+            <forkCount>1</forkCount>
+            <reuseForks>true</reuseForks>
+            <argLine>
+              -Xfuture
+              -Xmx1024m
+            </argLine>
           </configuration>
-          <dependencies>
-            <dependency>
-              <groupId>org.junit.platform</groupId>
-              <artifactId>junit-platform-surefire-provider</artifactId>
-              <version>1.2.0</version>
-            </dependency>
-            <dependency>
-              <groupId>org.junit.jupiter</groupId>
-              <artifactId>junit-jupiter-engine</artifactId>
-              <version>${junit-jupiter.version}</version>
-            </dependency>
-          </dependencies>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.0.1</version>
-          <configuration>
-            <detectJavaApiLink>false</detectJavaApiLink>
-            <doctitle>Expression Calculator ${project.version} Java Source Code Documentation
-            </doctitle>
-            <author>false</author>
-            <show>protected</show>
-            <linksource>false</linksource>
-            <bottom><![CDATA[<p>]]></bottom>
-            <charset>${exprcalculator.charset}</charset>
-            <docencoding>${exprcalculator.charset}</docencoding>
-            <encoding>${exprcalculator.charset}</encoding>
-            <header>
-              <![CDATA[
-								<a href="${exprcalculator.url}">Expression calculator</a>
-								<br></br>
-								Java Source Code Documentation
-							]]>
-            </header>
-            <footer>
-              <![CDATA[Licensed under <a href="${exprcalculator.licenseUrl}">${exprcalculator.licenseName}</a>]]>
-            </footer>
-            <locale>en</locale>
-            <windowtitle>Expression Calculator Java Source Code Documentation</windowtitle>
-            <groups>
-              <group>
-                <title>Expression Calculator</title>
-                <packages>
-                  stinc.male.exprcalculator:stinc.male.exprcalculator.*
-                </packages>
-              </group>
-            </groups>
-            <links>
-              <link>http://docs.oracle.com/javase/9/docs/api/</link>
-              <link>https://javaee.github.io/javaee-spec/javadocs/</link>
-              <link>http://stincmale.github.io/jsr-305/javadoc/</link>
-              <link>https://google.github.io/guava/releases/25.1-jre/api/docs/</link>
-            </links>
-            <validateLinks>true</validateLinks>
-            <includeDependencySources>false</includeDependencySources>
-            <includeTransitiveDependencySources>false</includeTransitiveDependencySources>
-            <serialwarn>true</serialwarn>
-            <additionalparam>-Xdoclint:all -Xdoclint:-missing</additionalparam>
-          </configuration>
-          <executions>
-            <execution>
-              <id>attach-aggregated-javadocs</id>
-              <phase>package</phase>
-              <goals>
-                <goal>aggregate-jar</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
-    <defaultGoal>package</defaultGoal>
+    <defaultGoal>verify</defaultGoal>
     <resources>
       <resource>
         <filtering>true</filtering>
@@ -306,9 +234,7 @@
     <profile>
       <id>default</id>
       <properties>
-        <maven.test.skip>false</maven.test.skip>
-        <exprcalculator.maven-surefire-plugin.parallel>suitesAndClasses</exprcalculator.maven-surefire-plugin.parallel>
-        <exprcalculator.maven-surefire-plugin.excludeTags>performance</exprcalculator.maven-surefire-plugin.excludeTags>
+        <maven.test.skip>true</maven.test.skip>
       </properties>
       <activation>
         <activeByDefault>true</activeByDefault>
@@ -323,18 +249,10 @@
       </build>
     </profile>
     <profile>
-      <id>doc</id>
+      <id>withTests</id>
       <properties>
-        <maven.test.skip>true</maven.test.skip>
+        <maven.test.skip>false</maven.test.skip>
       </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 </project>

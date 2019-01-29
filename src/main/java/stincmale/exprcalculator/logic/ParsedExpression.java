@@ -1,4 +1,4 @@
-package stinc.male.exprcalculator.logic;
+package stincmale.exprcalculator.logic;
 
 import java.math.MathContext;
 import java.util.stream.Stream;

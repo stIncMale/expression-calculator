@@ -1,9 +1,8 @@
-package stinc.male.exprcalculator.logic;
+package stincmale.exprcalculator.logic;
 
 import javax.annotation.Nullable;
+import stincmale.exprcalculator.Main;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static stinc.male.exprcalculator.Main.LN;
-import static stinc.male.exprcalculator.logic.ExpressionSpliterator.isEmptySymbol;
 
 public final class CalculationException extends RuntimeException {
   private static final long serialVersionUID = 0;
@@ -74,14 +73,14 @@ public final class CalculationException extends RuntimeException {
   private static final String description(final int problemIdx, @Nullable final String word, final String expr) {
     final String result;
     if (problemIdx < 0) {
-      result = String.format("Can not calculate expression:%s%s", LN, expr);
+      result = String.format("Can not calculate expression:%s%s", Main.LN, expr);
     } else {
       final String spaces;
       {
         final char[] spaceChars = new char[problemIdx];
         for (int i = 0; i < spaceChars.length; i++) {
           final char symbolToSubstitute = expr.charAt(i);
-          if (isEmptySymbol(symbolToSubstitute)) {
+          if (ExpressionSpliterator.isEmptySymbol(symbolToSubstitute)) {
             spaceChars[i] = symbolToSubstitute;
           } else {
             spaceChars[i] = ' ';
@@ -90,7 +89,7 @@ public final class CalculationException extends RuntimeException {
         spaces = new String(spaceChars);
       }
       result =
-          String.format("Problem with '%s' at index %s:", word == null ? expr.charAt(problemIdx) : word, problemIdx) + LN + expr + LN + spaces + '^';
+          String.format("Problem with '%s' at index %s:", word == null ? expr.charAt(problemIdx) : word, problemIdx) + Main.LN + expr + Main.LN + spaces + '^';
     }
     return result;
   }

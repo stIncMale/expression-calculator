@@ -16,7 +16,7 @@
     <Root level="warn">
       <AppenderRef ref="stdout"/>
     </Root>
-    <Logger name="stinc.male.exprcalculator" additivity="false" level="all">
+    <Logger name="stincmale.exprcalculator" additivity="false" level="off">
       <AppenderRef ref="stdout"/>
     </Logger>
   </Loggers>

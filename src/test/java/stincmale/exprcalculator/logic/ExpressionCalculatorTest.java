@@ -1,20 +1,21 @@
-package stinc.male.exprcalculator.logic;
+package stincmale.exprcalculator.logic;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class TestExpressionCalculator {
+/*
+ * Set level="debug" in log4j2.xml to enable logging.
+ */
+@TestInstance(Lifecycle.PER_METHOD)
+public final class ExpressionCalculatorTest {
   private static final MathContext mc = MathContext.DECIMAL32;
 
-  static {
-    Configurator.setAllLevels("", org.apache.logging.log4j.Level.OFF);//disable logging
-  }
-  
-  public TestExpressionCalculator() {
+  public ExpressionCalculatorTest() {
   }
 
   @Test
