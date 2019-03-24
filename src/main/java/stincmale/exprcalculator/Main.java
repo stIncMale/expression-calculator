@@ -2,12 +2,14 @@ package stincmale.exprcalculator;
 
 import com.beust.jcommander.ParameterException;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Locale;
+import java.util.TimeZone;
 import javax.annotation.Nullable;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
@@ -29,12 +31,12 @@ public final class Main {
   private static final Logger logger;
 
   static {
-    System.setProperty("line.separator", LN);//set line separator; according to JDK this is a standard property
-    try {//set charset for std streams
-      System.setOut(new PrintStream(System.out, true, charset.name()));
-      System.setErr(new PrintStream(System.err, true, charset.name()));
-    } catch (final UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
+    Locale.setDefault(Locale.ROOT);
+    TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.from(ZoneOffset.UTC)));
+    System.setProperty("line.separator", LN);//this is a standard property
+    {//set UTF-8 charset for the standard out/err streams.
+      System.setOut(new PrintStream(System.out, true, charset));
+      System.setErr(new PrintStream(System.err, true, charset));
     }
     logger = LoggerFactory.getLogger(Main.class);
   }
@@ -53,9 +55,7 @@ public final class Main {
       final MathContext mc = inputAndArgs.getArguments()
           .getMathContext();
       final ExpressionCalculator calculator = new ExpressionCalculator(new MathContext(
-          /*
-           * By using increased precision and then rounding we can achieve mult(div(1, 3), 3) == 1 instead of 0.999...
-           */
+          //by using increased precision and then rounding we can achieve mult(div(1, 3), 3) == 1 instead of 0.999...
           mc.getPrecision() == 0 ? 0 : mc.getPrecision() + 1, mc.getRoundingMode()));
       final BigDecimal result = calculator.calculate(inputAndArgs.getInput())
           .round(inputAndArgs.getArguments()

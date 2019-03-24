@@ -47,11 +47,11 @@ public class PerformanceTest {
         .shouldFailOnError(true)
         .threads(1)
         .timeout(milliseconds(5_000))
-        .forks(3)
+        .forks(1)
         .warmupTime(milliseconds(200))
-        .warmupIterations(10)
+        .warmupIterations(4)
         .measurementTime(milliseconds(200))
-        .measurementIterations(5);
+        .measurementIterations(3);
     new Runner(jmhOptions.include(PerformanceTest.class.getName() + ".*")
         .mode(Mode.AverageTime)
         .timeUnit(TimeUnit.MICROSECONDS)

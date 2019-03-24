@@ -2,8 +2,3 @@ sub(12, let(a, let(b, let(c, let(e, 13, add(e, e)), add(1, c)), add(b, b)), let(
 let(d, sub(mult(add(8, 13), div(28, 24)), let(a, let(b, 10, add(b, b)), let(c, 20, add(a, c)))), add(div(d, 13), d))
 let(d, sub(mult(add(8, 13), div(28, 24)), let(a, let(b, sub(8, let(f, let(g, let(h, let(i, 7, add(i, i)), add(3, h)), add(g, 23)), let(j, 5, add(f, j)))), add(b, b)), let(c, 20, add(a, c)))), add(div(d, 13), d))
 let(d, sub(mult(add(8, 13), div(sub(mult(add(8, 13), add(mult(3, div(125, 25)), sub(54, sub(mult(add(83, 130), add(mult(23, div(125, 25)), sub(-54, -100))), 2)))), 32), 24)), let(a, let(b, sub(8, let(f, let(g, let(h, let(i, 7, add(i, i)), add(3, h)), add(g, 23)), let(j, 5, add(f, j)))), add(b, b)), let(c, sub(mult(add(83, 130), add(mult(23, div(125, 25)), sub(-54, -100))), 2), add(a, c)))), add(div(d, 13), d))
-#add(1, 2)
-#add(1, mult(2, 3))
-#mult(add(2, 2), div(9, 3))
-#let(a, 5, add(a, a))
-#let(a, 5, let(b, mult(a, 10), add(b, a)))

@@ -7,7 +7,7 @@
   </Properties>
   <Appenders>
     <Console name="stdout" target="system_out">
-      <Layout type="PatternLayout" charset="UTF-8">
+      <Layout type="PatternLayout" charset="${exprcalculator.charset}">
         <Pattern>${exprcalculator.layoutPattern}</Pattern>
       </Layout>
     </Console>
