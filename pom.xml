@@ -23,7 +23,7 @@
     <exprcalculator.charset>UTF-8</exprcalculator.charset>
     <project.build.sourceEncoding>${exprcalculator.charset}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-    <log4j.version>2.11.2</log4j.version>
+    <log4j.version>2.13.3</log4j.version>
     <jmh.version>1.21</jmh.version>
     <exprcalculator.url>https://github.com/stIncMale/expression-calculator</exprcalculator.url>
     <exprcalculator.licenseName>WTFPL</exprcalculator.licenseName>
